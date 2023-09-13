@@ -36,7 +36,7 @@
         //결제 요청
         new Promise((resolve, reject) => {
             IMP.request_pay({
-                pg: "kakaopay.TC0ONETIME",
+                pg: "kcp.T0000",
                 pay_method: "card",
                 merchant_uid: merchantUid,
                 name: "[Todo구독권]" + subscriptionName,
