@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/views/users-subscription/{usersSubscriptionId}")
+@RequestMapping("/views/users-subscription/{usersSubscriptionId}")
 public class PaymentViewsController {
     private final UsersSubscriptionService usersSubscriptionService;
     @GetMapping("/request-payment")

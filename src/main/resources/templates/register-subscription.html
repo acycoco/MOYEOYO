@@ -57,7 +57,7 @@
                     console.log(data)
                     var usersSubscriptionId = data.date.id;
                     console.log(usersSubscriptionId)
-                    window.location.href = `/api/views/users-subscription/${usersSubscriptionId}/request-payment`;
+                    window.location.href = `/views/users-subscription/${usersSubscriptionId}/request-payment`;
                 })
                 .catch(error => console.error('팀 구독 생성 요청 오류:', error));
         }

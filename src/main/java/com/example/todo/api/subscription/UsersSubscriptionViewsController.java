@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/views")
+@RequestMapping("/views")
 public class UsersSubscriptionViewsController {
 
     //구독권 등록 페이지
