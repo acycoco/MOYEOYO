@@ -71,8 +71,8 @@
                 <td>${users_subscription.startDate}</td>
                 <td>${users_subscription.endDate}</td>
                 <td>${users_subscription.subscriptionStatus}</td>
-                <td><a href="/api/views/users-subscription/${users_subscription.id}">상세보기</a></td>
-                <td><a href="/api/views/users-subscription/${users_subscription.id}/payment">결제내역</a></td>
+                <td><a href="/views/users-subscription/${users_subscription.id}">상세보기</a></td>
+                <td><a href="/views/users-subscription/${users_subscription.id}/payment">결제내역</a></td>
             `;
                 subscriptionList.appendChild(row);
                 const line = document.createElement("hr");

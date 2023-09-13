@@ -36,7 +36,7 @@
         //결제 요청
         new Promise((resolve, reject) => {
             IMP.request_pay({
-                pg: "kcp",
+                pg: "kakaopay.TC0ONETIME",
                 pay_method: "card",
                 merchant_uid: merchantUid,
                 name: "[Todo구독권]" + subscriptionName,
@@ -61,8 +61,7 @@
             fetch(`/api/users-subscription/${usersSubscriptionId}/payment/verifyIamport`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTMxNDc0MDgsImV4cCI6MTY5MzE1MTAwOCwiaWQiOjIsInJvbGUiOiJVU0VSIn0.g5mJBId2EIJ45hJ8tQY_iud5PfMsUUIhJ4uTMp2VKe0`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(verifyData)
             }).then(response => response.json())
@@ -87,8 +86,7 @@
                         fetch(`/api/users-subscription/${usersSubscriptionId}/payment/complete`, {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTMxNDc0MDgsImV4cCI6MTY5MzE1MTAwOCwiaWQiOjIsInJvbGUiOiJVU0VSIn0.g5mJBId2EIJ45hJ8tQY_iud5PfMsUUIhJ4uTMp2VKe0'
+                                'Content-Type': 'application/json'
                             },
                             body: JSON.stringify(paymentInfo)
                         }).then(processResponse => {
@@ -109,19 +107,19 @@
                             }
                         }).catch(error => {
                             console.error('결제 정보 전송 오류:', error);
-                            alert('결제 정보 전송에 실패하였습니다.');
                             cancelPayment(rsp, userId, usersSubscriptionId);
+                            alert('결제 정보 전송에 실패하였습니다.');
                         });
                     } else {
                         //결제 검증 실패 -> 결제 취소
                         console.log(verifyResult.message);
-                        alert(`${verifyResult.message}`);
                         cancelPayment(rsp, userId, usersSubscriptionId);
+                        alert(`${verifyResult.message}`);
                     }
                 }).catch(error => {
                 console.error('결제 검증 실패:', error);
-                alert(`결제 검증에 실패하였습니다.: ${error.message}`);
                 cancelPayment(rsp, userId, usersSubscriptionId);
+                alert(`결제 검증에 실패하였습니다.: ${error.message}`);
             });
         }).catch(error => {
             console.error('결제 처리 오류:', error.message);
