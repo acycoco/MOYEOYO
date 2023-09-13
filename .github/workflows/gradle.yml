@@ -47,7 +47,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: chmod to asciidoctor
-        run: chmod +x ./asciidoctor
+        run: chmod -x asciidoctor
 #       (3) Gradle build (Test 제외)
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
