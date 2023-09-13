@@ -20,11 +20,14 @@ import com.example.todo.dto.task.TaskCreateDto;
 import com.example.todo.dto.team.TeamOverviewDto;
 import com.example.todo.exception.ErrorCode;
 import com.example.todo.exception.TodoAppException;
+import com.example.todo.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.time.LocalDate;
 
@@ -36,10 +39,10 @@ import static com.example.todo.service.team.TeamService.FREE_TEAM_PARTICIPANT_NU
 public class TaskApiService {
     private final TaskApiRepository taskApiRepository;
     private final TeamReposiotry teamReposiotry;
-    private final NotificationController notificationController;
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
     private final UsersSubscriptionRepository usersSubscriptionRepository;
+    private final NotificationService notificationService;
 
     //조직이 존재하는지 확인하는 메소드
     public TeamEntity getTeamById(Long teamId) {
@@ -71,7 +74,7 @@ public class TaskApiService {
         return false; // 사용자가 해당 팀의 멤버가 아닌 경우 false 반환
     }
 
-    public void isAvailableFunction(TeamEntity teamEntity){
+    public void isAvailableFunction(TeamEntity teamEntity) {
         if (teamEntity.getParticipantNumMax() > FREE_TEAM_PARTICIPANT_NUM) {
             UsersSubscriptionEntity usersSubscription = usersSubscriptionRepository.findByUsersAndSubscriptionStatus(teamEntity.getManager(), SubscriptionStatus.ACTIVE)
                     .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_AVAILABLE_FUNCTION));
@@ -200,14 +203,7 @@ public class TaskApiService {
         taskApiRepository.save(taskApiEntity);
         //업무 수정후 업무 상태가 이전 상태와 달라졌을때만 알림보내기
         if (!previousStatus.equals(taskApiEntity.getStatus())) {
-            LocalDateTime currentTime = LocalDateTime.now(); // 현재 시간
-
-            NotificationDto notificationDto = new NotificationDto();
-            notificationDto.setContent("'" + taskApiEntity.getTeam().getName() + "'팀의 업무'"
-                    + taskApiEntity.getTaskName() + "'의 진행상황이 '" + taskApiEntity.getStatus() + "'(으)로 변경되었습니다.");
-            notificationDto.setCreatedTime(currentTime);
-
-            notificationController.updateNews(notificationDto);
+            sendTaskStatusNotification(taskApiEntity);
         }
         return new ResponseDto("업무가 수정되었습니다.");
     }
@@ -241,5 +237,50 @@ public class TaskApiService {
             if (!taskApiEntity.getStatus().equals("완료")) myTasksInATeam.add(TaskApiDto.fromEntity(taskApiEntity));
         return myTasksInATeam;
 
+    }
+
+    @Scheduled(fixedRate = 60000) // 1분마다 실행
+    public void updateTaskStatusAuto() {
+        LocalDate currentDate = LocalDate.now();
+        List<TaskApiEntity> tasks = taskApiRepository.findAll();
+
+        for (TaskApiEntity task : tasks) {
+            if ("진행중".equals(task.getStatus())) {
+                if (task.getDueDate().isBefore(currentDate)) {
+                    task.setStatus("완료");
+                    taskApiRepository.save(task);
+
+                    sendTaskStatusNotification(task);
+                }
+            } else if ("진행예정".equals(task.getStatus())) {
+                if (task.getStartDate().isBefore(currentDate)) {
+                    task.setStatus("진행중");
+                    taskApiRepository.save(task);
+
+                    sendTaskStatusNotification(task);
+                }
+            }
+        }
+    }
+
+    private void sendTaskStatusNotification(TaskApiEntity taskApiEntity) {
+        LocalDateTime currentTime = LocalDateTime.now(); // 현재 시간
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String formattedTime = currentTime.format(formatter);
+
+
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setContent("'" + taskApiEntity.getTeam().getName() + "'팀의 업무'"
+                + taskApiEntity.getTaskName() + "'의 진행상황이 '" + taskApiEntity.getStatus() + "'(으)로 변경되었습니다. "
+                + formattedTime);
+
+        // 팀에 속한 모든 멤버를 검색
+        List<MemberEntity> teamMembers = memberRepository.findAllByTeamId(taskApiEntity.getTeam().getId());
+
+        // 각 멤버에게 알림을 보냄
+        for (MemberEntity member : teamMembers) {
+            Long userId = member.getUser().getId();
+            notificationService.notify(userId, notificationDto);
+        }
     }
 }

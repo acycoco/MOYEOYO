@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -52,11 +53,14 @@ public class TaskCommentService {
         taskCommentRepository.save(taskCommentEntity);
 
         // 댓글을 작성한 사용자와 업무 관리자를 비교
-        if (!user.getId().equals(team.getManager().getId())) {
+        if (!user.getId().equals(taskApiEntity.getWorkerId())) {
             LocalDateTime currentTime = LocalDateTime.now(); // 현재 시간
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            String formattedTime = currentTime.format(formatter);
+
             // 알림 메시지 생성
-            String message = "'" + team.getName() + "'팀의 " + user.getUsername() + "님이'" + taskApiEntity.getTaskName() + "'에 메시지를 남겼습니다. createdTime:" + currentTime;            // 관리자에게 알림을 보냄
-            notificationService.notify(team.getManager().getId(), message);
+            String message = "'" + team.getName() + "'팀의 " + user.getUsername() + "님이'" + taskApiEntity.getTaskName() + "'에 메시지를 남겼습니다. createdTime:" + formattedTime;            // 관리자에게 알림을 보냄
+            notificationService.notify(taskApiEntity.getWorkerId(), message);
         } else throw new TodoAppException(ErrorCode.NOT_ALLOWED_MESSAGE);
     }
 
@@ -129,27 +133,29 @@ public class TaskCommentService {
         replyEntity.setWriter(user);
         replyEntity.setReply(taskCommentReplyDto.getReply());
         LocalDateTime currentTime = LocalDateTime.now(); // 현재 시간
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String formattedTime = currentTime.format(formatter);
 
         // 알림을 받을 사용자의 ID를 가져오기 위해 TaskCommentEntity를 사용하여 작성자의 ID를 가져옴
         Long receiveUserId = taskCommentEntity.getWriter().getId();
-        boolean isManager = userId.equals(team.getManager().getId());
+        boolean isWoker = userId.equals(taskApiEntity.getWorkerId());
 
         // 답글을 작성한 사용자와 댓글 작성자가 다를 때 알림을 보냄
         if (!userId.equals(receiveUserId)) {
             // 알림 메시지 생성
-            String message = "'" + team.getName() + "'팀의 " + user.getUsername() + "님이'" + taskApiEntity.getTaskName() + "'에 메시지를 남겼습니다. createdTime:" + currentTime;
+            String message = "'" + team.getName() + "'팀의 " + user.getUsername() + "님이'" + taskApiEntity.getTaskName() + "'에 메시지를 남겼습니다. createdTime:" + formattedTime;
             // 댓글 작성자에게 알림 보내기
             notificationService.notify(receiveUserId, message);
-            if (!isManager) { // 관리자도 아닌, 제3자라면
-                // 업무 관리자에게도 알림 보내기
-                notificationService.notify(team.getManager().getId(), message);
+            if (!isWoker) { //업무담당자도 아닌, 제3자라면
+                // 업무 담당자에게도 알림 보내기
+                notificationService.notify(taskApiEntity.getWorkerId(), message);
             }
         } else {
-            // 댓쓴이가 답글을 달았다면, 관리자에게 알림 보내기
+            // 댓쓴이가 답글을 달았다면, 담당자에게 알림 보내기
             // 알림 메시지 생성
-            String message = "'" + team.getName() + "'팀의 " + user.getUsername() + "님이'" + taskApiEntity.getTaskName() + "'에 메시지를 남겼습니다. createdTime:"+ currentTime;
-            // 업무 관리자에게 알림 보내기
-            notificationService.notify(team.getManager().getId(), message);
+            String message = "'" + team.getName() + "'팀의 " + user.getUsername() + "님이'" + taskApiEntity.getTaskName() + "'에 메시지를 남겼습니다. createdTime:"+ formattedTime;
+            // 업무 담당자에게 알림 보내기
+            notificationService.notify(taskApiEntity.getWorkerId(), message);
         }
         return taskCommentReplyRepository.save(replyEntity);
     }
