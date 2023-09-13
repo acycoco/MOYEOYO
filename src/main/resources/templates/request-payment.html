@@ -52,24 +52,24 @@
 
         }).then(function (rsp) {
             console.log(rsp);
-            const verifyData = {
-                impUid: rsp.imp_uid,
-                paidAmount: rsp.paid_amount
-            };
-
-            //결제 검증
-            fetch(`/api/users-subscription/${usersSubscriptionId}/payment/verifyIamport`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(verifyData)
-            }).then(response => response.json())
-                .then(verifyResult => {
-
-                    if (verifyResult.status === "success") {
-                        //결제 검증 성공
-                        console.log(verifyResult.message);
+            // const verifyData = {
+            //     impUid: rsp.imp_uid,
+            //     paidAmount: rsp.paid_amount
+            // };
+            //
+            // //결제 검증
+            // fetch(`/api/users-subscription/${usersSubscriptionId}/payment/verifyIamport`, {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify(verifyData)
+            // }).then(response => response.json())
+            //     .then(verifyResult => {
+            //
+            //         if (verifyResult.status === "success") {
+            //             //결제 검증 성공
+            //             console.log(verifyResult.message);
 
                         var paymentInfo = {
                             impUid: rsp.imp_uid,
@@ -111,17 +111,17 @@
                             cancelPayment(rsp, usersSubscriptionId);
                             alert('결제 정보 전송에 실패하였습니다.');
                         });
-                    } else {
-                        //결제 검증 실패 -> 결제 취소
-                        console.log(verifyResult.message);
-                        cancelPayment(rsp, usersSubscriptionId);
-                        alert(`${verifyResult.message}`);
-                    }
-                }).catch(error => {
-                console.error('결제 검증 실패:', error);
-                cancelPayment(rsp, usersSubscriptionId);
-                alert(`결제 검증에 실패하였습니다.: ${error.message}`);
-            });
+                    // } else {
+                    //     //결제 검증 실패 -> 결제 취소
+                    //     console.log(verifyResult.message);
+                    //     cancelPayment(rsp, usersSubscriptionId);
+                    //     alert(`${verifyResult.message}`);
+                    // }
+                // }).catch(error => {
+                // console.error('결제 검증 실패:', error);
+                // cancelPayment(rsp, usersSubscriptionId);
+                // alert(`결제 검증에 실패하였습니다.: ${error.message}`);
+            // });
         }).catch(error => {
             console.error('결제 처리 오류:', error.message);
             alert('결제 처리에 실패하였습니다.');
