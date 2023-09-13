@@ -95,31 +95,31 @@
                                 console.log('결제 완료')
                                 alert('결제가 완료되었습니다.');
                                 window.location.href = '/views/users-subscription/active';
-                                // cancelPayment(rsp, userId, usersSubscriptionId); //취소 테스트  -> 나중에 삭제해야됨
+                                // cancelPayment(rsp, usersSubscriptionId); //취소 테스트  -> 나중에 삭제해야됨
                                 console.log(rsp);
 
                             } else {
                                 //결제 정보 저장 실패 => 결제 취소
                                 processResponse.json().then(processError => {
                                     console.error('결제 정보 전송 오류:', processError);
-                                    cancelPayment(rsp, userId, usersSubscriptionId);
+                                    cancelPayment(rsp, usersSubscriptionId);
                                     alert(`error:[${processResponse.status}]\n결제요청이 승인된 경우 관리자에게 문의바랍니다.`);
                                 });
                             }
                         }).catch(error => {
                             console.error('결제 정보 전송 오류:', error);
-                            cancelPayment(rsp, userId, usersSubscriptionId);
+                            cancelPayment(rsp, usersSubscriptionId);
                             alert('결제 정보 전송에 실패하였습니다.');
                         });
                     } else {
                         //결제 검증 실패 -> 결제 취소
                         console.log(verifyResult.message);
-                        cancelPayment(rsp, userId, usersSubscriptionId);
+                        cancelPayment(rsp, usersSubscriptionId);
                         alert(`${verifyResult.message}`);
                     }
                 }).catch(error => {
                 console.error('결제 검증 실패:', error);
-                cancelPayment(rsp, userId, usersSubscriptionId);
+                cancelPayment(rsp, usersSubscriptionId);
                 alert(`결제 검증에 실패하였습니다.: ${error.message}`);
             });
         }).catch(error => {
@@ -128,7 +128,7 @@
         });
     }
 
-    function cancelPayment(rsp, userId, usersSubscriptionId) {
+    function cancelPayment(rsp, usersSubscriptionId) {
         if (rsp != null) {
             data = {
                 impUid: rsp.imp_uid,
