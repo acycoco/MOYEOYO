@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/views/admin")
+@RequestMapping("/views/admin")
 public class AdminSubscriptionViewsController {
     //admin
     @GetMapping("/create-subscription")
