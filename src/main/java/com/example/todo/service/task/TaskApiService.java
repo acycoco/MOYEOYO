@@ -239,7 +239,7 @@ public class TaskApiService {
 
     }
 
-    @Scheduled(fixedRate = 60000) // 1분마다 실행
+    @Scheduled(cron = "0 0 0 * * *")
     public void updateTaskStatusAuto() {
         LocalDate currentDate = LocalDate.now();
         List<TaskApiEntity> tasks = taskApiRepository.findAll();
