@@ -29,7 +29,7 @@ public class TeamController {
         return "team-search.html";
     }
 
-    @GetMapping("/search?keyword=")
+    @GetMapping("/search")
     public Page<TeamOverviewDto> searchTeam(@RequestParam("keyword") String keyword,
                                             @RequestParam(value = "page", defaultValue = "0") Integer page,
                                             @RequestParam(value = "limit", defaultValue = "30") Integer limit) {
