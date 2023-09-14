@@ -3,9 +3,11 @@ package com.example.todo.dto.team;
 import com.example.todo.domain.entity.TeamEntity;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class TeamOverviewDto {
     private Long id;
     private String teamName;
