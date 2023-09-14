@@ -152,7 +152,7 @@ public class TeamService {
 
     public Page<TeamOverviewDto> searchTeam(String keyword, Integer page, Integer limit) {
         Pageable pageable = PageRequest.of(page, limit, Sort.by("createdAt").descending());
-        Page<TeamEntity> teamEntityPage = teamReposiotry.findTeamEntitiesByNameAndAndDeletedAtEmpty(keyword, pageable);
+        Page<TeamEntity> teamEntityPage = teamReposiotry.findAllByNameContainingAndDeletedAtIsNull(keyword, pageable);
 
         Page<TeamOverviewDto> teamOverviewDtoPage = teamEntityPage.map(TeamOverviewDto::fromEntity);
         return teamOverviewDtoPage;
