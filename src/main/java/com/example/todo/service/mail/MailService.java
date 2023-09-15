@@ -43,7 +43,7 @@ public class MailService {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         ThreadPoolTaskExecutor executor = create();
         int count = 0;
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 200; i++) {
             count++;
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
@@ -57,7 +57,7 @@ public class MailService {
                 javaMailSender.send(simpleMailMessage);
             }, executor);
             if (count % 50 == 0) {
-                Thread.sleep(60000L * 3);
+                Thread.sleep(60000L * 2);
             }
             futures.add(future);
         }
