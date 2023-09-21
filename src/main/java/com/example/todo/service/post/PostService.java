@@ -4,6 +4,7 @@ import com.example.todo.domain.entity.TeamEntity;
 import com.example.todo.domain.entity.image.Image;
 import com.example.todo.domain.entity.post.Post;
 import com.example.todo.domain.entity.user.User;
+import com.example.todo.domain.repository.MemberRepository;
 import com.example.todo.domain.repository.TeamReposiotry;
 import com.example.todo.domain.repository.image.ImageRepository;
 import com.example.todo.domain.repository.post.PostRepository;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.example.todo.exception.ErrorCode.INTERNAL_SERVER_ERROR;
+import static com.example.todo.exception.ErrorCode.NOT_FOUND_MEMBER;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,15 +37,16 @@ public class PostService {
     private final UserRepository userRepository;
     private final TeamReposiotry teamReposiotry;
     private final ImageRepository imageRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public PostCreateResponseDto createPost(final PostCreateRequestDto createDto, Long userId, Long teamId) {
         User user = userRepository.getById(userId);
         TeamEntity team = teamReposiotry.getById(teamId);
-
+        validateMember(team, user);
         Post post = postRepository.save(createDto.toEntity(user, team));
 
-        // 이미지 첨부했을 경우
+        // 이미지 첨부했을 경우 - ImageService 만들어서 분리해야 될 거 같음.
         List<MultipartFile> images = createDto.getImages();
         String teamDir = createTeamDir(teamId);
 
@@ -68,6 +71,11 @@ public class PostService {
         }
 
         return new PostCreateResponseDto(post);
+    }
+
+    private void validateMember(final TeamEntity team, final User user) {
+        memberRepository.findByTeamAndUser(team, user)
+                .orElseThrow(() -> new TodoAppException(NOT_FOUND_MEMBER, NOT_FOUND_MEMBER.getMessage()));
     }
 
     private String createTeamDir(final Long teamId) {
