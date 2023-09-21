@@ -2,15 +2,14 @@ package com.example.todo.domain.entity;
 
 import com.example.todo.domain.entity.user.User;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "team")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +29,23 @@ public class TeamEntity extends BaseTimeEntity {
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
     private List<MemberEntity> members;
 
+    @OneToMany(mappedBy = "team")
+    private List<PostEntity> posts;
 
-   
+    @Builder
+    public TeamEntity(final Long id, final String name, final String description, final String joinCode, final Integer participantNum, final Integer participantNumMax, final User manager, final List<MemberEntity> members, final List<PostEntity> posts) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.joinCode = joinCode;
+        this.participantNum = participantNum;
+        this.participantNumMax = participantNumMax;
+        this.manager = manager;
+        this.members = members;
+        this.posts = posts;
+    }
+
+
     public Long getManagerId() {
         return manager.getId();
     }
