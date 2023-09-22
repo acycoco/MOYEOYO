@@ -1,7 +1,7 @@
 package com.example.todo.dto.team;
 
 import com.example.todo.domain.entity.TeamEntity;
-import com.example.todo.dto.task.TaskApiDto;
+//import com.example.todo.dto.task.TaskApiDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,9 +15,9 @@ public class TeamDetailsDto {
     private String desc;
     private List<String> members;
     private Integer memberLimit;
-    private List<TaskApiDto> notDoneTasks;
-    private List<TaskApiDto> doneTasks;
-    private List<TaskApiDto> allTasks;
+//    private List<TaskApiDto> notDoneTasks;
+//    private List<TaskApiDto> doneTasks;
+//    private List<TaskApiDto> allTasks;
 
     public static TeamDetailsDto fromEntity(TeamEntity teamEntity) {
         TeamDetailsDto teamDetailsDto = new TeamDetailsDto();

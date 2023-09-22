@@ -1,7 +1,7 @@
 package com.example.todo.domain.entity.chat;
 
 import com.example.todo.domain.entity.BaseTimeEntity;
-import com.example.todo.domain.entity.TaskApiEntity;
+//import com.example.todo.domain.entity.TaskApiEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,8 +18,8 @@ public class ChatRoom extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_id")
-    private TaskApiEntity taskApiEntity;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "task_id")
+//    private TaskApiEntity taskApiEntity;
 
 }

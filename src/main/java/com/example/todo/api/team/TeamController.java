@@ -36,12 +36,12 @@ public class TeamController {
         return teamService.searchTeam(keyword, page, limit);
     }
 
-    @GetMapping("/{teamId}")
-    public TeamDetailsDto getTeamPage(Authentication authentication,
-                                         @PathVariable("teamId") Long teamId) {
-        Long userId = Long.parseLong(authentication.getName());
-        return teamService.getTeamDetails(userId, teamId);
-    }
+//    @GetMapping("/{teamId}")
+//    public TeamDetailsDto getTeamPage(Authentication authentication,
+//                                         @PathVariable("teamId") Long teamId) {
+//        Long userId = Long.parseLong(authentication.getName());
+//        return teamService.getTeamDetails(userId, teamId);
+//    }
 
     @PostMapping
     public ResponseDto createTeam(Authentication authentication,
