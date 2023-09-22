@@ -1,8 +1,6 @@
 package com.example.todo.service.notification;
 
 import com.example.todo.domain.repository.NotificationRepository;
-import com.example.todo.domain.repository.TaskCommentRepository;
-import com.example.todo.domain.repository.TeamReposiotry;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
