@@ -35,7 +35,7 @@ public class Post extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private User writer;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "post")
     private List<Image> images = new ArrayList<>();
 
     public void increaseViewCount() {
