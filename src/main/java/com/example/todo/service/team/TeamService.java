@@ -50,22 +50,23 @@ public class TeamService {
                 throw new TodoAppException(ErrorCode.EXCEED_ALLOWED_TEAM_MEMBERS);
         }
 
-        TeamEntity teamEntity = new TeamEntity();
-        teamEntity.setName(teamCreateDto.getName());
-        teamEntity.setDescription(teamCreateDto.getDescription());
-        teamEntity.setJoinCode(teamCreateDto.getJoinCode());
-        teamEntity.setManager(manager);
-        teamEntity.setParticipantNumMax(teamCreateDto.getParticipantNumMax());
+        TeamEntity team = TeamEntity.builder()
+                .name(teamCreateDto.getName())
+                .description(teamCreateDto.getDescription())
+                .joinCode(teamCreateDto.getJoinCode())
+                .manager(manager)
+                .participantNumMax(teamCreateDto.getParticipantNumMax())
+                .build();
 
         // manager를 멤버로 추가
         MemberEntity member = new MemberEntity();
-        member.setTeam(teamEntity);
+        member.setTeam(team);
         member.setUser(manager);
 
-        teamEntity.setMembers(new ArrayList<>());
-        teamEntity.getMembers().add(member);
-        teamEntity.setParticipantNum(teamEntity.getMembers().size());
-        teamReposiotry.save(teamEntity);
+        team.setMembers(new ArrayList<>());
+        team.getMembers().add(member);
+        team.setParticipantNum(team.getMembers().size());
+        teamReposiotry.save(team);
         memberRepository.save(member);
     }
 

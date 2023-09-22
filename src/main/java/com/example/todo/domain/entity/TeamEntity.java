@@ -9,6 +9,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "team")
+@Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamEntity extends BaseTimeEntity {
     @Id
@@ -27,13 +29,13 @@ public class TeamEntity extends BaseTimeEntity {
     private User manager;
 
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
-    private List<MemberEntity> members;
+    private List<MemberEntity> members = new ArrayList<>();
 
     @OneToMany(mappedBy = "team")
-    private List<PostEntity> posts;
+    private List<Post> posts = new ArrayList<>();
 
     @Builder
-    public TeamEntity(final Long id, final String name, final String description, final String joinCode, final Integer participantNum, final Integer participantNumMax, final User manager, final List<MemberEntity> members, final List<PostEntity> posts) {
+    public TeamEntity(final Long id, final String name, final String description, final String joinCode, final Integer participantNum, final Integer participantNumMax, final User manager, final List<MemberEntity> members, final List<Post> posts) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -44,6 +46,13 @@ public class TeamEntity extends BaseTimeEntity {
         this.members = members;
         this.posts = posts;
     }
+
+
+    public Boolean containsMember(User user) {
+        return this.members.stream()
+                .anyMatch(member -> member.getUser().equals(user));
+    }
+
 
 
     public Long getManagerId() {
