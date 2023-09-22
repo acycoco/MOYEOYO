@@ -1,8 +1,8 @@
 package com.example.todo.service.team;
 
-import com.example.todo.domain.entity.MemberEntity;
-import com.example.todo.domain.entity.TeamEntity;
-import com.example.todo.domain.entity.UsersSubscriptionEntity;
+import com.example.todo.domain.entity.Member;
+import com.example.todo.domain.entity.Team;
+import com.example.todo.domain.entity.UsersSubscription;
 import com.example.todo.domain.entity.enums.SubscriptionStatus;
 import com.example.todo.domain.entity.user.User;
 import com.example.todo.domain.repository.MemberRepository;
@@ -40,13 +40,13 @@ public class TeamService {
 
         //팀 최대인원이 5명을 초과할 시 구독권을 구독해야 한다.
         if (teamCreateDto.getParticipantNumMax() > FREE_TEAM_PARTICIPANT_NUM) {
-            UsersSubscriptionEntity usersSubscription = usersSubscriptionRepository.findByUsersAndSubscriptionStatus(manager, SubscriptionStatus.ACTIVE)
+            UsersSubscription usersSubscription = usersSubscriptionRepository.findByUsersAndSubscriptionStatus(manager, SubscriptionStatus.ACTIVE)
                     .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_ACTIVE_SUBSCRIPTION));
             if (teamCreateDto.getParticipantNumMax() > usersSubscription.getSubscription().getMaxMember())
                 throw new TodoAppException(ErrorCode.EXCEED_ALLOWED_TEAM_MEMBERS);
         }
 
-        TeamEntity team = TeamEntity.builder()
+        Team team = Team.builder()
                 .name(teamCreateDto.getName())
                 .description(teamCreateDto.getDescription())
                 .joinCode(teamCreateDto.getJoinCode())
@@ -55,7 +55,7 @@ public class TeamService {
                 .build();
 
         // manager를 멤버로 추가
-        MemberEntity member = new MemberEntity();
+        Member member = new Member();
         member.setTeam(team);
         member.setUser(manager);
 
@@ -70,9 +70,9 @@ public class TeamService {
     public void joinTeam(Long userId, TeamJoinDto teamJoinDto, Long teamId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USER));
 
-        TeamEntity team = teamReposiotry.findById(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
-//        TeamEntity team = teamReposiotry.findByIdWithPessimisticLock(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
-//        TeamEntity team = teamReposiotry.findByIdWithOptimisticLock(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
+        Team team = teamReposiotry.findById(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
+//        Team team = teamReposiotry.findByIdWithPessimisticLock(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
+//        Team team = teamReposiotry.findByIdWithOptimisticLock(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
 
         if (!team.getJoinCode().equals(teamJoinDto.getJoinCode()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong JoinCode!");
@@ -85,7 +85,7 @@ public class TeamService {
         if (memberRepository.findByTeamAndUser(team, user).isPresent())
             throw new TodoAppException(ErrorCode.ALREADY_USER_JOINED);
 
-        MemberEntity member = new MemberEntity();
+        Member member = new Member();
         member.setTeam(team);
         member.setUser(user);
         memberRepository.save(member);
@@ -98,7 +98,7 @@ public class TeamService {
 
     public void updateTeamDetails(Long userId, TeamUpdateDto teamUpdateDto, Long teamId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USER));
-        TeamEntity team = teamReposiotry.findById(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
+        Team team = teamReposiotry.findById(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
 
         if (team.getManagerId() != user.getId()) throw new TodoAppException(ErrorCode.MISMATCH_MANAGERID_USERID);
 
@@ -116,7 +116,7 @@ public class TeamService {
 
 
         if (!teamUpdateDto.getManager().getUsername().equals("")) {
-            MemberEntity member = memberRepository.findByTeamAndUser(team, user).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_MEMBER));
+            Member member = memberRepository.findByTeamAndUser(team, user).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_MEMBER));
             team.setManager(member.getUser());
         }
 
@@ -125,7 +125,7 @@ public class TeamService {
 
     public void deleteTeam(Long userId, Long teamId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USER));
-        TeamEntity team = teamReposiotry.findById(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
+        Team team = teamReposiotry.findById(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
 
         if (team.getManagerId() != user.getId()) throw new TodoAppException(ErrorCode.MISMATCH_MANAGERID_USERID);
 
@@ -135,8 +135,8 @@ public class TeamService {
     @Transactional
     public void leaveTeam(Long userId, Long teamId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USER));
-        TeamEntity team = teamReposiotry.findById(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
-        MemberEntity member = memberRepository.findByTeamAndUser(team, user).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_MEMBER));
+        Team team = teamReposiotry.findById(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
+        Member member = memberRepository.findByTeamAndUser(team, user).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_MEMBER));
 
         member.setTeam(null);
         memberRepository.delete(member);
@@ -149,7 +149,7 @@ public class TeamService {
 
     public Page<TeamOverviewDto> searchTeam(String keyword, Integer page, Integer limit) {
         Pageable pageable = PageRequest.of(page, limit, Sort.by("createdAt").descending());
-        Page<TeamEntity> teamEntityPage = teamReposiotry.findAllByNameContainingAndDeletedAtIsNull(keyword, pageable);
+        Page<Team> teamEntityPage = teamReposiotry.findAllByNameContainingAndDeletedAtIsNull(keyword, pageable);
 
         Page<TeamOverviewDto> teamOverviewDtoPage = teamEntityPage.map(TeamOverviewDto::fromEntity);
         return teamOverviewDtoPage;
@@ -157,8 +157,8 @@ public class TeamService {
 
 //    public TeamDetailsDto getTeamDetails(Long userId, Long teamId) {
 //        User user = userRepository.findById(userId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USER));
-//        TeamEntity team = teamReposiotry.findById(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
-//        MemberEntity member = memberRepository.findByTeamAndUser(team, user).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_MEMBER));
+//        Team team = teamReposiotry.findById(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
+//        Member member = memberRepository.findByTeamAndUser(team, user).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_MEMBER));
 //
 //        TeamDetailsDto teamDetailsDto = TeamDetailsDto.fromEntity(team);
 //

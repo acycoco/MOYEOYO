@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TeamEntity extends BaseTimeEntity {
+public class Team extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,13 +29,13 @@ public class TeamEntity extends BaseTimeEntity {
     private User manager;
 
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
-    private List<MemberEntity> members = new ArrayList<>();
+    private List<Member> members = new ArrayList<>();
 
     @OneToMany(mappedBy = "team")
     private List<Post> posts = new ArrayList<>();
 
     @Builder
-    public TeamEntity(final Long id, final String name, final String description, final String joinCode, final Integer participantNum, final Integer participantNumMax, final User manager, final List<MemberEntity> members, final List<Post> posts) {
+    public Team(final Long id, final String name, final String description, final String joinCode, final Integer participantNum, final Integer participantNumMax, final User manager, final List<Member> members, final List<Post> posts) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -58,9 +58,9 @@ public class TeamEntity extends BaseTimeEntity {
     public Long getManagerId() {
         return manager.getId();
     }
-    public List<String> getMemebersNamesList(List<MemberEntity> members) {
+    public List<String> getMemebersNamesList(List<Member> members) {
         List<String> membersNamesList = new ArrayList<>();
-        for (MemberEntity member : members) membersNamesList.add(member.getUser().getUsername());
+        for (Member member : members) membersNamesList.add(member.getUser().getUsername());
 
         return membersNamesList;
     }

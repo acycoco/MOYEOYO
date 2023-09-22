@@ -1,7 +1,7 @@
 //package com.example.todo.service.team;
 //
-//import com.example.todo.domain.entity.MemberEntity;
-//import com.example.todo.domain.entity.TeamEntity;
+//import com.example.todo.domain.entity.Member;
+//import com.example.todo.domain.entity.Team;
 //import com.example.todo.domain.entity.user.User;
 //import com.example.todo.domain.repository.MemberRepository;
 //import com.example.todo.domain.repository.TeamReposiotry;
@@ -69,7 +69,7 @@
 //                .joinCode("참여코드")
 //                .build();
 //        teamService.joinTeam(user1.getId(), joinDto, 1L);
-//        List<MemberEntity> all = memberRepository.findAll();
+//        List<Member> all = memberRepository.findAll();
 //
 //        // then
 //        assertThat(all.size()).isEqualTo(2);
@@ -107,8 +107,8 @@
 //
 //        latch.await();
 //
-//        List<TeamEntity> all = teamReposiotry.findAll();
-//        List<MemberEntity> members = memberRepository.findAll();
+//        List<Team> all = teamReposiotry.findAll();
+//        List<Member> members = memberRepository.findAll();
 //        System.out.println("members.size() = " + members.size());
 //
 //        // then
@@ -117,7 +117,7 @@
 //        assertThat(members.size()).isEqualTo(101);
 //
 //        List<Long> list = new ArrayList<>();
-//        for (MemberEntity member : members) {
+//        for (Member member : members) {
 //            list.add(member.getUser().getId());
 //        }
 //        Collections.sort(list);
@@ -146,8 +146,8 @@
 //
 //        //manager까지 101명 가입
 //        List<User> users = userRepository.findAll();
-//        List<TeamEntity> team = teamReposiotry.findAll();
-//        List<MemberEntity> members = memberRepository.findAll();
+//        List<Team> team = teamReposiotry.findAll();
+//        List<Member> members = memberRepository.findAll();
 //
 //        int participantNumAfterTeamJoin = team.get(0).getParticipantNum();
 //        int memberAfterTeamJoin = members.size();
@@ -156,7 +156,7 @@
 //        CountDownLatch latch = new CountDownLatch(threadCount);
 //
 //        List<Long> memberList = new ArrayList<>();
-//        for (MemberEntity member : members){
+//        for (Member member : members){
 //            memberList.add(member.getId());
 //        }
 //

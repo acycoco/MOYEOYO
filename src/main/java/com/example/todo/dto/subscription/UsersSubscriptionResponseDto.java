@@ -1,6 +1,6 @@
 package com.example.todo.dto.subscription;
 
-import com.example.todo.domain.entity.UsersSubscriptionEntity;
+import com.example.todo.domain.entity.UsersSubscription;
 import com.example.todo.domain.entity.enums.SubscriptionStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +21,7 @@ public class UsersSubscriptionResponseDto {
     private String merchantUid;
     private BigDecimal SubscriptionPrice;
 
-    public static UsersSubscriptionResponseDto fromEntity(UsersSubscriptionEntity entity){
+    public static UsersSubscriptionResponseDto fromEntity(UsersSubscription entity){
         UsersSubscriptionResponseDto dto = new UsersSubscriptionResponseDto();
         dto.setId(entity.getId());
         dto.setStartDate(entity.getStartDate());

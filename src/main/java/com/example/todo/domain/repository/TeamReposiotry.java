@@ -1,6 +1,6 @@
 package com.example.todo.domain.repository;
 
-import com.example.todo.domain.entity.TeamEntity;
+import com.example.todo.domain.entity.Team;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,19 +14,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TeamReposiotry extends JpaRepository<TeamEntity, Long> {
-    Page<TeamEntity> findAllByNameContainingAndDeletedAtIsNull(String keyword, Pageable pageable);
-//    Page<TeamEntity> findTeamEntitiesByNameAndDeletedAtEmpty(String keyword, Pageable pageable);
-    List<TeamEntity> findByMembersUserId(Long userId);
+public interface TeamReposiotry extends JpaRepository<Team, Long> {
+    Page<Team> findAllByNameContainingAndDeletedAtIsNull(String keyword, Pageable pageable);
+//    Page<Team> findTeamEntitiesByNameAndDeletedAtEmpty(String keyword, Pageable pageable);
+    List<Team> findByMembersUserId(Long userId);
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select t " +
-            "from TeamEntity t " +
+            "from Team t " +
             "where t.id =:teamId")
-    Optional<TeamEntity> findByIdWithPessimisticLock(@Param("teamId") Long teamId);
+    Optional<Team> findByIdWithPessimisticLock(@Param("teamId") Long teamId);
 
     @Lock(value = LockModeType.OPTIMISTIC)
     @Query("select t " +
-            "from TeamEntity t " +
+            "from Team t " +
             "where t.id =:teamId")
-    Optional<TeamEntity> findByIdWithOptimisticLock(@Param("teamId") Long teamId);
+    Optional<Team> findByIdWithOptimisticLock(@Param("teamId") Long teamId);
 }

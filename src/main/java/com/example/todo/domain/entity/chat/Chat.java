@@ -1,6 +1,6 @@
 package com.example.todo.domain.entity.chat;
 
-import com.example.todo.domain.entity.BaseTimeEntity;
+import com.example.todo.domain.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Chat extends BaseTimeEntity {
+public class Chat extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

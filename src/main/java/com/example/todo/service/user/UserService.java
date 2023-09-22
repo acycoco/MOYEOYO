@@ -1,9 +1,6 @@
 package com.example.todo.service.user;
 
-import com.example.todo.domain.entity.SubscriptionEntity;
-import com.example.todo.domain.entity.UsersSubscriptionEntity;
 import com.example.todo.domain.entity.enums.Role;
-import com.example.todo.domain.entity.enums.SubscriptionStatus;
 import com.example.todo.domain.entity.user.User;
 import com.example.todo.domain.repository.SubscriptionRepository;
 import com.example.todo.domain.repository.UsersSubscriptionRepository;
@@ -12,7 +9,6 @@ import com.example.todo.dto.user.request.UserJoinRequestDto;
 import com.example.todo.dto.user.request.UserUpdateRequestDto;
 import com.example.todo.dto.user.response.UserJoinResponseDto;
 import com.example.todo.dto.user.response.UserUpdateResponseDto;
-import com.example.todo.exception.ErrorCode;
 import com.example.todo.exception.TodoAppException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,10 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.List;
 
 import static com.example.todo.exception.ErrorCode.ALREADY_USER_USERNAME;
 
@@ -73,7 +65,7 @@ public class UserService {
 //
 //    @Transactional
 //    public void userSubscription() {
-//        SubscriptionEntity subscription = subscriptionRepository.findById(1L)
+//        Subscription subscription = subscriptionRepository.findById(1L)
 //                .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_SUBSCRIPTION));
 //
 //        List<User> all = userRepository.findAll();
@@ -85,7 +77,7 @@ public class UserService {
 //            } else {
 //                days = 7;
 //            }
-//            UsersSubscriptionEntity usersSubscription = UsersSubscriptionEntity.builder()
+//            UsersSubscription usersSubscription = UsersSubscription.builder()
 //                    .users(all.get(i))
 //                    .subscription(subscription)
 //                    .startDate(LocalDate.now())

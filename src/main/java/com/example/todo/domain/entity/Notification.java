@@ -1,10 +1,5 @@
 package com.example.todo.domain.entity;
 
-import jakarta.persistence.*;
-import lombok.Data;
-
-import java.time.LocalDateTime;
-
 //@Entity
 //@Data
 //@Table(name = "notification")
@@ -19,5 +14,5 @@ import java.time.LocalDateTime;
 //    @OneToOne
 //    private TaskApiEntity taskApiEntity;
 //    @ManyToOne
-//    private MemberEntity member ;
+//    private Member member ;
 //}

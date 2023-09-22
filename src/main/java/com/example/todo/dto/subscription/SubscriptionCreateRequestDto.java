@@ -1,7 +1,7 @@
 package com.example.todo.dto.subscription;
 
 
-import com.example.todo.domain.entity.SubscriptionEntity;
+import com.example.todo.domain.entity.Subscription;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class SubscriptionCreateRequestDto {
     private BigDecimal price;
     private String description;
 
-    public static SubscriptionCreateRequestDto fromEntity(SubscriptionEntity entity){
+    public static SubscriptionCreateRequestDto fromEntity(Subscription entity){
         SubscriptionCreateRequestDto dto = new SubscriptionCreateRequestDto();
         dto.setName(entity.getName());
         dto.setMaxMember(entity.getMaxMember());

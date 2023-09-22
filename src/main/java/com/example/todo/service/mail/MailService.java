@@ -1,13 +1,9 @@
 package com.example.todo.service.mail;
 
-import com.example.todo.domain.entity.UsersSubscriptionEntity;
 import com.example.todo.domain.repository.UsersSubscriptionRepository;
-import com.example.todo.dto.mail.MailDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +35,7 @@ public class MailService {
     public void mailSend() throws InterruptedException {
         long beforeTime = System.currentTimeMillis(); // 코드 실행 전에 시간 받아오기
         LocalDate localDate = LocalDate.of(2023, 9, 12);
-//        List<UsersSubscriptionEntity> all = usersSubscriptionRepository.customFindAll(localDate);
+//        List<UsersSubscription> all = usersSubscriptionRepository.customFindAll(localDate);
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         ThreadPoolTaskExecutor executor = create();
         int count = 0;
@@ -78,7 +74,7 @@ public class MailService {
 //    @Async
 //    public void mailSend() {
 ////        LocalDate localDate = LocalDate.of(2023, 9, 12);
-////        List<UsersSubscriptionEntity> all = usersSubscriptionRepository.customFindAll(localDate);
+////        List<UsersSubscription> all = usersSubscriptionRepository.customFindAll(localDate);
 //        for (int i = 0; i < 30; i++) {
 //            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 //            simpleMailMessage.setTo("dbsquddlfz@naver.com");

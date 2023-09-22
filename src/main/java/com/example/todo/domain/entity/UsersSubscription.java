@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Table(name = "users_subscription")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UsersSubscriptionEntity extends BaseTimeEntity {
+public class UsersSubscription extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,11 +31,11 @@ public class UsersSubscriptionEntity extends BaseTimeEntity {
     private User users;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private SubscriptionEntity subscription;
+    private Subscription subscription;
 
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "usersSubscription")
-    private PaymentEntity payment;
+    private Payment payment;
 
 
     public void changeSubscriptionStatus(SubscriptionStatus subscriptionStatus){
@@ -44,7 +44,7 @@ public class UsersSubscriptionEntity extends BaseTimeEntity {
 
 
     @Builder
-    public UsersSubscriptionEntity(Long id, LocalDate startDate, LocalDate endDate, SubscriptionStatus subscriptionStatus, BigDecimal subscriptionPrice, String merchantUid, User users, SubscriptionEntity subscription, PaymentEntity payment) {
+    public UsersSubscription(Long id, LocalDate startDate, LocalDate endDate, SubscriptionStatus subscriptionStatus, BigDecimal subscriptionPrice, String merchantUid, User users, Subscription subscription, Payment payment) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;

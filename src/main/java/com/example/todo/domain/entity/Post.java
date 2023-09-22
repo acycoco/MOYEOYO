@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE post SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class Post extends BaseTimeEntity{
+public class Post extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,7 +30,7 @@ public class Post extends BaseTimeEntity{
     private Long viewCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private TeamEntity team;
+    private Team team;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User writer;
@@ -45,7 +45,7 @@ public class Post extends BaseTimeEntity{
         return this.writer.equals(user);
     }
 
-    public Boolean isTeam(TeamEntity team){
+    public Boolean isTeam(Team team){
         return this.team.equals(team);
     }
 
@@ -62,7 +62,7 @@ public class Post extends BaseTimeEntity{
     }
 
     @Builder
-    public Post(Long id, String title, String content, Long viewCount, TeamEntity team, User writer) {
+    public Post(Long id, String title, String content, Long viewCount, Team team, User writer) {
         this.id = id;
         this.title = title;
         this.content = content;

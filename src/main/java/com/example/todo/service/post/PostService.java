@@ -1,7 +1,7 @@
 package com.example.todo.service.post;
 
 import com.example.todo.domain.entity.Post;
-import com.example.todo.domain.entity.TeamEntity;
+import com.example.todo.domain.entity.Team;
 import com.example.todo.domain.entity.user.User;
 import com.example.todo.domain.repository.PostRepository;
 import com.example.todo.domain.repository.TeamReposiotry;
@@ -10,7 +10,6 @@ import com.example.todo.dto.post.PostResponseDto;
 import com.example.todo.exception.ErrorCode;
 import com.example.todo.exception.TodoAppException;
 import com.example.todo.service.image.ImageService;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,7 +36,7 @@ public class PostService {
     public PostResponseDto createPost(final String title, final String content, final List<MultipartFile> images,
                                       final Long teamId, final Long userId
     ) {
-        TeamEntity team = teamReposiotry.findById(teamId)
+        Team team = teamReposiotry.findById(teamId)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
 
         User user = userRepository.findById(userId)
@@ -68,7 +67,7 @@ public class PostService {
 
     @Transactional
     public PostResponseDto readPost(final Long teamId, final Long postId) {
-        TeamEntity team = teamReposiotry.findById(teamId)
+        Team team = teamReposiotry.findById(teamId)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
 
         Post post = postRepository.findById(postId)
@@ -88,7 +87,7 @@ public class PostService {
         Pageable pageable = PageRequest.of(
                 page - 1, limit, Sort.by("id").descending());
 
-        TeamEntity team = teamReposiotry.findById(teamId)
+        Team team = teamReposiotry.findById(teamId)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
         return postRepository.findAllByTeam(team, pageable).map(PostResponseDto::fromEntity);
     }
@@ -97,7 +96,7 @@ public class PostService {
     public PostResponseDto updatePost(final String title, final String content, final List<MultipartFile> images,
                                       final Long teamId, final Long userId, final Long postId
     ) {
-        TeamEntity team = teamReposiotry.findById(teamId)
+        Team team = teamReposiotry.findById(teamId)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
 
         User user = userRepository.findById(userId)
@@ -126,7 +125,7 @@ public class PostService {
 
     @Transactional
     public void deletePost(final Long teamId, final Long userId, final Long postId) {
-        TeamEntity team = teamReposiotry.findById(teamId)
+        Team team = teamReposiotry.findById(teamId)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
 
         User user = userRepository.findById(userId)

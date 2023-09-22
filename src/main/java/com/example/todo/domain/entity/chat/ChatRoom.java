@@ -1,18 +1,15 @@
 package com.example.todo.domain.entity.chat;
 
-import com.example.todo.domain.entity.BaseTimeEntity;
+import com.example.todo.domain.entity.BaseTime;
 //import com.example.todo.domain.entity.TaskApiEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Entity
 @Setter
-public class ChatRoom extends BaseTimeEntity {
+public class ChatRoom extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

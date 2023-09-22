@@ -1,7 +1,7 @@
 package com.example.todo.dto.subscription;
 
 
-import com.example.todo.domain.entity.SubscriptionEntity;
+import com.example.todo.domain.entity.Subscription;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +17,7 @@ public class SubscriptionResponseDto {
     private String description;
     private Boolean status;
 
-    public static SubscriptionResponseDto fromEntity(SubscriptionEntity entity){
+    public static SubscriptionResponseDto fromEntity(Subscription entity){
         SubscriptionResponseDto dto = new SubscriptionResponseDto();
         dto.setId(entity.getId());
         dto.setName(entity.getName());

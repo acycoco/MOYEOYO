@@ -1,6 +1,6 @@
 package com.example.todo.dto.payment;
 
-import com.example.todo.domain.entity.PaymentEntity;
+import com.example.todo.domain.entity.Payment;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +20,7 @@ public class PaymentResponseDto {
     private Long userId;
     private Long userSubscriptionId;
 
-    public static PaymentResponseDto fromEntity(PaymentEntity entity){
+    public static PaymentResponseDto fromEntity(Payment entity){
         PaymentResponseDto dto = new PaymentResponseDto();
         dto.setId(entity.getId());
         dto.setImpUid(entity.getImpUid());

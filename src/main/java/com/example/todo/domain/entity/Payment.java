@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Table(name = "Payment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PaymentEntity extends BaseTimeEntity {
+public class Payment extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,11 +35,11 @@ public class PaymentEntity extends BaseTimeEntity {
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY)
-    private UsersSubscriptionEntity usersSubscription;
+    private UsersSubscription usersSubscription;
 
 
     @Builder
-    public PaymentEntity(Long id, String impUid, BigDecimal amount, String merchantUid, String payStatus, String payMethod, LocalDateTime paymentDate, User user, UsersSubscriptionEntity usersSubscription) {
+    public Payment(Long id, String impUid, BigDecimal amount, String merchantUid, String payStatus, String payMethod, LocalDateTime paymentDate, User user, UsersSubscription usersSubscription) {
         this.id = id;
         this.impUid = impUid;
         this.amount = amount;

@@ -1,7 +1,7 @@
 package com.example.todo.domain.entity.user;
 
 import com.example.todo.domain.entity.Post;
-import com.example.todo.domain.entity.UsersSubscriptionEntity;
+import com.example.todo.domain.entity.UsersSubscription;
 import com.example.todo.domain.entity.enums.Role;
 import com.example.todo.dto.user.request.UserUpdateRequestDto;
 import jakarta.persistence.*;
@@ -28,7 +28,7 @@ public class User {
     private Role role;
 
     @OneToMany(mappedBy = "users")
-    private List<UsersSubscriptionEntity> usersSubscriptions;
+    private List<UsersSubscription> usersSubscriptions;
 
     @OneToMany(mappedBy = "writer")
     private List<Post> posts;

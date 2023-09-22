@@ -1,6 +1,6 @@
 package com.example.todo.dto.team;
 
-import com.example.todo.domain.entity.TeamEntity;
+import com.example.todo.domain.entity.Team;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,12 +14,12 @@ public class TeamOverviewDto {
     private String teamManagerName;
     private String teamDesc;
 
-    public static TeamOverviewDto fromEntity(TeamEntity teamEntity) {
+    public static TeamOverviewDto fromEntity(Team team) {
         TeamOverviewDto teamOverviewDto = new TeamOverviewDto();
-        teamOverviewDto.setId(teamEntity.getId());
-        teamOverviewDto.setTeamName(teamEntity.getName());
-        teamOverviewDto.setTeamManagerName(teamEntity.getManager().getUsername());
-        teamOverviewDto.setTeamDesc(teamEntity.getDescription());
+        teamOverviewDto.setId(team.getId());
+        teamOverviewDto.setTeamName(team.getName());
+        teamOverviewDto.setTeamManagerName(team.getManager().getUsername());
+        teamOverviewDto.setTeamDesc(team.getDescription());
         return teamOverviewDto;
     }
 }

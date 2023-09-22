@@ -1,9 +1,6 @@
 package com.example.todo.api.user;
 
 import com.example.todo.domain.Response;
-import com.example.todo.domain.entity.UsersSubscriptionEntity;
-import com.example.todo.domain.entity.user.User;
-import com.example.todo.dto.team.TeamOverviewDto;
 import com.example.todo.dto.user.request.UserJoinRequestDto;
 import com.example.todo.dto.user.request.UserUpdateRequestDto;
 import com.example.todo.dto.user.response.UserAllResponseDto;
@@ -11,14 +8,11 @@ import com.example.todo.dto.user.response.UserJoinResponseDto;
 import com.example.todo.dto.user.response.UserUpdateResponseDto;
 import com.example.todo.service.read.UserReadService;
 import com.example.todo.service.user.UserService;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("/api")

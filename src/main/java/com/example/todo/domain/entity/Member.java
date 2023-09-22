@@ -8,13 +8,13 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class MemberEntity {
+public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade=CascadeType.ALL)
-    private TeamEntity team;
+    private Team team;
     @ManyToOne(cascade=CascadeType.ALL)
     private User user;
 }

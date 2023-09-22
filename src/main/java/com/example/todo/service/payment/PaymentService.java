@@ -1,7 +1,7 @@
 package com.example.todo.service.payment;
 
-import com.example.todo.domain.entity.PaymentEntity;
-import com.example.todo.domain.entity.UsersSubscriptionEntity;
+import com.example.todo.domain.entity.Payment;
+import com.example.todo.domain.entity.UsersSubscription;
 import com.example.todo.domain.entity.enums.SubscriptionStatus;
 import com.example.todo.domain.entity.user.User;
 import com.example.todo.domain.repository.PaymentRepository;
@@ -15,7 +15,6 @@ import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
-import com.siot.IamportRestClient.response.Payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class PaymentService {
 
     @Transactional
     public PaymentResponseDto completePayment(PaymentInfoDto paymentInfo, Long userId){
-        UsersSubscriptionEntity usersSubscription = usersSubscriptionRepository.findByMerchantUid(paymentInfo.getMerchantUid())
+        UsersSubscription usersSubscription = usersSubscriptionRepository.findByMerchantUid(paymentInfo.getMerchantUid())
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USERS_SUBSCRIPTION));
 
         usersSubscription.changeSubscriptionStatus(SubscriptionStatus.ACTIVE);
@@ -44,7 +43,7 @@ public class PaymentService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USER));
 
-        PaymentEntity payment = PaymentEntity.builder()
+        Payment payment = Payment.builder()
                 .impUid(paymentInfo.getImpUid())
                 .amount(paymentInfo.getPaidAmount())
                 .merchantUid(paymentInfo.getMerchantUid())
@@ -64,7 +63,7 @@ public class PaymentService {
     //위변조 검증
     public void verifyIamport(String impUid, BigDecimal amount) throws IamportResponseException, IOException {
         //iamport 서버의 결제결과
-        IamportResponse<Payment> iamportResponse = iamportClient.paymentByImpUid(impUid);
+        IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(impUid);
 
         //iamport의 금액과 실제 결제 금액 비교
         if (!amount.equals(iamportResponse.getResponse().getAmount())) {
@@ -73,7 +72,7 @@ public class PaymentService {
 
         log.info("{}  {}", impUid, iamportResponse.getResponse().getMerchantUid());
 
-        UsersSubscriptionEntity usersSubscription = usersSubscriptionRepository.findByMerchantUid(iamportResponse.getResponse().getMerchantUid())
+        UsersSubscription usersSubscription = usersSubscriptionRepository.findByMerchantUid(iamportResponse.getResponse().getMerchantUid())
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USERS_SUBSCRIPTION));
 
         log.info("{}", usersSubscription);
@@ -90,14 +89,14 @@ public class PaymentService {
 
     @Transactional
     public void cancelPayment(String impUid, BigDecimal amount) throws IamportResponseException, IOException {
-        IamportResponse<Payment> iamportResponse = iamportClient.paymentByImpUid(impUid);
+        IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(impUid);
         if (!iamportResponse.getResponse().getAmount().equals(amount)){
             //환불 금액이 결제된 금액과 다름
             throw new TodoAppException(ErrorCode.NOT_MATCH_IAMPORT_CANCEL_AMOUNT);
         }
         CancelData cancelData = new CancelData(iamportResponse.getResponse().getImpUid(), true);
         cancelData.setChecksum(amount);
-        IamportResponse<Payment> result = iamportClient.cancelPaymentByImpUid(cancelData);
+        IamportResponse<com.siot.IamportRestClient.response.Payment> result = iamportClient.cancelPaymentByImpUid(cancelData);
 
         //이미 취소된 거래는 response가 null이다.
         if (result == null){
@@ -110,13 +109,13 @@ public class PaymentService {
         if (!userRepository.existsById(userId))
             throw new TodoAppException(ErrorCode.NOT_FOUND_USER);
 
-        UsersSubscriptionEntity usersSubscription = usersSubscriptionRepository.findById(usersSubscriptionId)
+        UsersSubscription usersSubscription = usersSubscriptionRepository.findById(usersSubscriptionId)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USERS_SUBSCRIPTION));
 
         if (!userId.equals(usersSubscription.getUsers().getId()))
             throw new TodoAppException(ErrorCode.NOT_MATCH_USERS_AND_USERS_SUBSCRIPTION);
 
-        PaymentEntity payment = paymentRepository.findByUsersSubscription(usersSubscription)
+        Payment payment = paymentRepository.findByUsersSubscription(usersSubscription)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_PAYMENT));
 
         return PaymentResponseDto.fromEntity(payment);

@@ -1,7 +1,7 @@
 package com.example.todo.service.subscription;
 
-import com.example.todo.domain.entity.SubscriptionEntity;
-import com.example.todo.domain.entity.UsersSubscriptionEntity;
+import com.example.todo.domain.entity.Subscription;
+import com.example.todo.domain.entity.UsersSubscription;
 import com.example.todo.domain.entity.enums.SubscriptionStatus;
 import com.example.todo.domain.entity.user.User;
 import com.example.todo.domain.repository.*;
@@ -47,11 +47,11 @@ public class UsersSubscriptionService {
         if (usersSubscriptionRepository.existsByUsersAndSubscriptionStatus(user, SubscriptionStatus.ACTIVE))
             throw new TodoAppException(ErrorCode.ALREADY_ACTIVE_USERS_SUBSCRIPTION);
 
-        SubscriptionEntity subscription = subscriptionRepository.findById(subscriptionId)
+        Subscription subscription = subscriptionRepository.findById(subscriptionId)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_SUBSCRIPTION));
 
         //users_subscription PENDING 상태로 생성
-        UsersSubscriptionEntity usersSubscription = UsersSubscriptionEntity.builder()
+        UsersSubscription usersSubscription = UsersSubscription.builder()
                 .users(user)
                 .subscription(subscription)
                 .startDate(LocalDate.now())
@@ -70,7 +70,7 @@ public class UsersSubscriptionService {
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USER));
 
         //findAllByUsers가 맞는지 findAllByUsersIs가 맞는지..
-        Page<UsersSubscriptionEntity> usersSubscriptionPages = usersSubscriptionRepository.findAllByUsers(user, PageRequest.of(page - 1, limit));
+        Page<UsersSubscription> usersSubscriptionPages = usersSubscriptionRepository.findAllByUsers(user, PageRequest.of(page - 1, limit));
         return usersSubscriptionPages.map(UsersSubscriptionResponseDto::fromEntity);
     }
 
@@ -79,7 +79,7 @@ public class UsersSubscriptionService {
         if (!userRepository.existsById(userId))
             throw new TodoAppException(ErrorCode.NOT_FOUND_USER);
 
-        UsersSubscriptionEntity usersSubscription = usersSubscriptionRepository.findById(usersSubscriptionId)
+        UsersSubscription usersSubscription = usersSubscriptionRepository.findById(usersSubscriptionId)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USERS_SUBSCRIPTION));
 
         if (!userId.equals(usersSubscription.getUsers().getId()))
@@ -93,7 +93,7 @@ public class UsersSubscriptionService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USER));
 
-        UsersSubscriptionEntity usersActiveSubscription = usersSubscriptionRepository.findByUsersAndSubscriptionStatus(user, SubscriptionStatus.ACTIVE)
+        UsersSubscription usersActiveSubscription = usersSubscriptionRepository.findByUsersAndSubscriptionStatus(user, SubscriptionStatus.ACTIVE)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_ACTIVE_SUBSCRIPTION));
 
         return UsersSubscriptionResponseDto.fromEntity(usersActiveSubscription);
@@ -104,7 +104,7 @@ public class UsersSubscriptionService {
         if (!userRepository.existsById(userId))
             throw new TodoAppException(ErrorCode.NOT_FOUND_USER);
 
-        UsersSubscriptionEntity usersSubscription = usersSubscriptionRepository.findById(usersSubscriptionId)
+        UsersSubscription usersSubscription = usersSubscriptionRepository.findById(usersSubscriptionId)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USERS_SUBSCRIPTION));
 
         if (!userId.equals(usersSubscription.getUsers().getId()))
@@ -122,9 +122,9 @@ public class UsersSubscriptionService {
     @Scheduled(cron = "0 0 0 * * *") // 매일 자정에 실행
     public void scheduleUsersSubscriptionExpired(){
 
-        List<UsersSubscriptionEntity> expiredUsersSubscriptions =
+        List<UsersSubscription> expiredUsersSubscriptions =
                 usersSubscriptionRepository.findAllByEndDateBeforeAndSubscriptionStatus(LocalDate.now(), SubscriptionStatus.ACTIVE);
-        for (UsersSubscriptionEntity expiredUsersSubscription : expiredUsersSubscriptions) {
+        for (UsersSubscription expiredUsersSubscription : expiredUsersSubscriptions) {
 
             //만료로 상태변경
             expiredUsersSubscription.changeSubscriptionStatus(SubscriptionStatus.EXPIRED);
@@ -137,7 +137,7 @@ public class UsersSubscriptionService {
         if (!userRepository.existsById(userId))
             throw new TodoAppException(ErrorCode.NOT_FOUND_USER);
 
-        UsersSubscriptionEntity usersSubscription = usersSubscriptionRepository.findById(usersSubscriptionId)
+        UsersSubscription usersSubscription = usersSubscriptionRepository.findById(usersSubscriptionId)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USERS_SUBSCRIPTION));
 
         if (!userId.equals(usersSubscription.getUsers().getId()))

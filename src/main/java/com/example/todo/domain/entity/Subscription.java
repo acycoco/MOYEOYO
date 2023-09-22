@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "subscription")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SubscriptionEntity extends BaseTimeEntity {
+public class Subscription extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,7 +24,7 @@ public class SubscriptionEntity extends BaseTimeEntity {
     private Boolean status;
 
     @OneToMany(mappedBy = "subscription")
-    private List<UsersSubscriptionEntity> userSubscriptions;
+    private List<UsersSubscription> userSubscriptions;
 
     public void changeName(String name){
         this.name = name;
@@ -48,7 +48,7 @@ public class SubscriptionEntity extends BaseTimeEntity {
     }
 
     @Builder
-    public SubscriptionEntity(Long id, String name, Integer maxMember, BigDecimal price, String description, Boolean status) {
+    public Subscription(Long id, String name, Integer maxMember, BigDecimal price, String description, Boolean status) {
         this.id = id;
         this.name = name;
         this.maxMember = maxMember;

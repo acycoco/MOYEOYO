@@ -1,6 +1,6 @@
 package com.example.todo.dto.user.response;
 
-import com.example.todo.domain.entity.UsersSubscriptionEntity;
+import com.example.todo.domain.entity.UsersSubscription;
 import com.example.todo.domain.entity.enums.SubscriptionStatus;
 import com.example.todo.domain.entity.user.User;
 import lombok.AccessLevel;
@@ -20,7 +20,7 @@ public class UserAllResponseDto {
     private LocalDate end;
     private SubscriptionStatus status;
 
-    public UserAllResponseDto(final UsersSubscriptionEntity usersSubscription, final User user) {
+    public UserAllResponseDto(final UsersSubscription usersSubscription, final User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.phone = user.getPhone();
