@@ -20,7 +20,7 @@ public class Image extends BaseTime {
 
     private String imageUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
     @Builder

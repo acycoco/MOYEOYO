@@ -1,6 +1,7 @@
 package com.example.todo.api.post;
 
 import com.example.todo.domain.Response;
+import com.example.todo.dto.post.PostReadAllResponseDto;
 import com.example.todo.dto.post.PostResponseDto;
 import com.example.todo.service.post.PostService;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -31,7 +32,7 @@ public class PostApiController {
     }
 
     @GetMapping
-    public Response<Page<PostResponseDto>> readAll(
+    public Response<Page<PostReadAllResponseDto>> readAll(
             @PathVariable("teamId") Long teamId,
             @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "limit", defaultValue = "5") Integer limit
     ){

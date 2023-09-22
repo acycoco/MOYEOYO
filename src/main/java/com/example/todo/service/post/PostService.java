@@ -6,6 +6,7 @@ import com.example.todo.domain.entity.user.User;
 import com.example.todo.domain.repository.PostRepository;
 import com.example.todo.domain.repository.TeamReposiotry;
 import com.example.todo.domain.repository.user.UserRepository;
+import com.example.todo.dto.post.PostReadAllResponseDto;
 import com.example.todo.dto.post.PostResponseDto;
 import com.example.todo.exception.ErrorCode;
 import com.example.todo.exception.TodoAppException;
@@ -83,13 +84,13 @@ public class PostService {
 
 
     @Transactional
-    public Page<PostResponseDto> readPostAll(final Long teamId, Integer page, Integer limit) {
+    public Page<PostReadAllResponseDto> readPostAll(final Long teamId, Integer page, Integer limit) {
         Pageable pageable = PageRequest.of(
                 page - 1, limit, Sort.by("id").descending());
 
         Team team = teamReposiotry.findById(teamId)
                 .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
-        return postRepository.findAllByTeam(team, pageable).map(PostResponseDto::fromEntity);
+        return postRepository.findAllByTeam(team, pageable).map(PostReadAllResponseDto::fromEntity);
     }
 
     @Transactional
