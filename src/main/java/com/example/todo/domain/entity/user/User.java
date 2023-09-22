@@ -1,6 +1,6 @@
 package com.example.todo.domain.entity.user;
 
-import com.example.todo.domain.entity.PostEntity;
+import com.example.todo.domain.entity.Post;
 import com.example.todo.domain.entity.UsersSubscriptionEntity;
 import com.example.todo.domain.entity.enums.Role;
 import com.example.todo.dto.user.request.UserUpdateRequestDto;
@@ -30,21 +30,19 @@ public class User {
     @OneToMany(mappedBy = "users")
     private List<UsersSubscriptionEntity> usersSubscriptions;
 
-    @OneToMany(mappedBy = "users")
-    private List<PostEntity> posts;
+    @OneToMany(mappedBy = "writer")
+    private List<Post> posts;
 
-    public User(Long id, String username, String password, String profileImage, String phone, Role role, List<UsersSubscriptionEntity> usersSubscriptions, List<PostEntity> posts) {
+    @Builder
+    public User(Long id, String username, String password, String profileImage, String phone, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.profileImage = profileImage;
         this.phone = phone;
         this.role = role;
-        this.usersSubscriptions = usersSubscriptions;
-        this.posts = posts;
     }
 
-    @Builder
 
 
     public void updateProfile(final UserUpdateRequestDto updateDto, final String password, final String profileImage) {
