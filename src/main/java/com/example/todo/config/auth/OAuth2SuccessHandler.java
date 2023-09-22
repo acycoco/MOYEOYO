@@ -57,7 +57,7 @@ public class OAuth2SuccessHandler
         Optional<User> optionalUser = userRepository.findByUsername(username);
         // 처음으로 소셜 로그인한 사용자를 데이터베이스에 등록
         if (optionalUser.isEmpty()) {
-            User user = new User(username, providerId,null,null, Role.USER);
+            User user = new User(Long.parseLong(providerId), username, null, null, null, Role.USER);
             userRepository.save(user);
         }
 
