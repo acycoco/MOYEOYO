@@ -52,6 +52,11 @@ public class PostService {
         validateMember(team, user);
         Post post = postRepository.save(createDto.toEntity(user, team));
 
+        // 이미지 첨부하지 않았을 경우
+        if (createDto.getImages() == null) {
+            return new PostCreateResponseDto(post);
+        }
+
         // 이미지 첨부했을 경우 - ImageService 만들어서 분리해야 될 거 같음.
         List<MultipartFile> images = createDto.getImages();
         String teamDir = createTeamDir(teamId);
