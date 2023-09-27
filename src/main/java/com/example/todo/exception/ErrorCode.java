@@ -42,6 +42,8 @@ public enum ErrorCode {
     NOT_FOUND_ACTIVE_SUBSCRIPTION(NOT_FOUND, "해당 활성화된 구독권이 존재하지 않습니다."),
     NOT_FOUND_PAYMENT(NOT_FOUND, "해당 결제 상제 정보가 존재하지 않습니다."),
 
+    NOT_FOUND_POST(NOT_FOUND, "해당 게시글을 찾을 수 없습니다."),
+
 
     ALREADY_USER_USERNAME(CONFLICT, "이미 존재하는 사용자입니다."),
     ALREADY_USER_JOINED(BAD_REQUEST, "이미 해당 팀에 가입한 유저입니다."),

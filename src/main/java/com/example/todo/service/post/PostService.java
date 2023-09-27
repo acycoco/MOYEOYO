@@ -12,6 +12,7 @@ import com.example.todo.domain.repository.user.UserRepository;
 import com.example.todo.dto.post.request.PostCreateRequestDto;
 import com.example.todo.dto.post.response.PostCreateResponseDto;
 import com.example.todo.dto.post.response.PostListResponseDto;
+import com.example.todo.dto.post.response.PostOneResponseDto;
 import com.example.todo.exception.TodoAppException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -95,6 +96,15 @@ public class PostService {
 //        List<PostListResponseDto> collect = readAllPost.stream().map(p -> new PostListResponseDto(p, user)).collect(Collectors.toList());
 
         return postListResponseDto;
+    }
+
+    public PostOneResponseDto readOnePost(Long userId, Long teamId, Long postId) {
+        User user = userRepository.getById(userId);
+        TeamEntity team = teamReposiotry.getById(teamId);
+        validateMember(team, user);
+
+        Post post = postRepository.getById(postId);
+        return new PostOneResponseDto(post);
     }
 
     private void validateMember(final TeamEntity team, final User user) {
