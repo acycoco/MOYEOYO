@@ -62,28 +62,6 @@ public class PostService {
 
         // 이미지 첨부했을 경우 - ImageService 만들어서 분리해야 될 거 같음.
         imageService.createImage(createDto, post, teamId);
-//        List<MultipartFile> images = createDto.getImages();
-//        String teamDir = createTeamDir(teamId);
-//
-//        for (MultipartFile image : images) {
-//            String postFilename = createPostFilename(image);
-//            String postPath = teamDir + postFilename;
-//            Path path = Path.of(postPath);
-//
-//            try {
-//                image.transferTo(path);
-//            } catch (IOException e) {
-//                log.error("createPost error = {}", e);
-//                throw new TodoAppException(INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR.getMessage());
-//            }
-//
-//            String imageUrl = String.format("/static/%d/%s", teamId, postFilename);
-//            Image savedImage = Image.builder()
-//                    .image(imageUrl)
-//                    .post(post)
-//                    .build();
-//            imageRepository.save(savedImage);
-//        }
 
         return new PostCreateResponseDto(post);
     }
@@ -131,23 +109,4 @@ public class PostService {
                 .orElseThrow(() -> new TodoAppException(NOT_FOUND_MEMBER, NOT_FOUND_MEMBER.getMessage()));
     }
 
-    private String createTeamDir(final Long teamId) {
-        String teamDir = String.format("team/%d/", teamId);
-
-        try {
-            Files.createDirectories(Path.of(teamDir));
-        } catch (IOException e) {
-            log.error("createPost error = {}", e);
-            throw new TodoAppException(INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR.getMessage());
-        }
-        return teamDir;
-    }
-
-    private String createPostFilename(final MultipartFile image) {
-        String originalFilename = image.getOriginalFilename();
-        String[] filenameSplit = originalFilename.split("\\.");
-        String extension = filenameSplit[filenameSplit.length - 1];
-        String uuid = UUID.randomUUID() + ".";
-        return uuid + extension;
-    }
 }
