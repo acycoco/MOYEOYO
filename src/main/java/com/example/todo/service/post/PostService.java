@@ -11,6 +11,7 @@ import com.example.todo.domain.repository.post.PostRepository;
 import com.example.todo.domain.repository.user.UserRepository;
 import com.example.todo.dto.post.request.PostCreateRequestDto;
 import com.example.todo.dto.post.response.PostCreateResponseDto;
+import com.example.todo.dto.post.response.PostDeleteResponseDto;
 import com.example.todo.dto.post.response.PostListResponseDto;
 import com.example.todo.dto.post.response.PostOneResponseDto;
 import com.example.todo.exception.TodoAppException;
@@ -31,8 +32,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.example.todo.exception.ErrorCode.INTERNAL_SERVER_ERROR;
-import static com.example.todo.exception.ErrorCode.NOT_FOUND_MEMBER;
+import static com.example.todo.exception.ErrorCode.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -105,6 +105,22 @@ public class PostService {
 
         Post post = postRepository.getById(postId);
         return new PostOneResponseDto(post);
+    }
+
+    @Transactional
+    public PostDeleteResponseDto deletePost(Long userId, Long teamId, Long postId) {
+        User user = userRepository.getById(userId);
+        TeamEntity team = teamReposiotry.getById(teamId);
+        validateMember(team, user);
+
+        Post post = postRepository.getById(postId);
+        // 본인이 작성한 글인지 체크
+        if (!post.getUser().getId().equals(userId)) {
+            throw new TodoAppException(NOT_MATCH_USERID, NOT_MATCH_USERID.getMessage());
+        }
+
+        postRepository.delete(post);
+        return new PostDeleteResponseDto(post);
     }
 
     private void validateMember(final TeamEntity team, final User user) {

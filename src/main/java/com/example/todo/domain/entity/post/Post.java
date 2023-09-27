@@ -17,7 +17,7 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@SQLDelete(sql = "UPDATE Post SET delete_at = current_timestamp where post_id = ?")
+@SQLDelete(sql = "UPDATE todo.post SET deleted_at = current_timestamp where id = ?")
 @Where(clause = "deleted_at is null")
 @Entity
 public class Post extends BaseTimeEntity {
@@ -37,7 +37,7 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Image> images = new ArrayList<>();
 
     private int viewCount;

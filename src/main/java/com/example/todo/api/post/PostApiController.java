@@ -3,6 +3,7 @@ package com.example.todo.api.post;
 import com.example.todo.domain.Response;
 import com.example.todo.dto.post.request.PostCreateRequestDto;
 import com.example.todo.dto.post.response.PostCreateResponseDto;
+import com.example.todo.dto.post.response.PostDeleteResponseDto;
 import com.example.todo.dto.post.response.PostListResponseDto;
 import com.example.todo.dto.post.response.PostOneResponseDto;
 import com.example.todo.service.post.PostService;
@@ -40,5 +41,13 @@ public class PostApiController {
                                                     @PathVariable final Long postId) {
         Long userId = Long.parseLong(authentication.getName());
         return Response.success(postService.readOnePost(userId, teamId, postId));
+    }
+
+    @DeleteMapping("/{teamId}/post/{postId}")
+    public Response<PostDeleteResponseDto> deletePost(final Authentication authentication,
+                                                      @PathVariable final Long teamId,
+                                                      @PathVariable final Long postId) {
+        Long userId = Long.parseLong(authentication.getName());
+        return Response.success(postService.deletePost(userId, teamId, postId));
     }
 }
