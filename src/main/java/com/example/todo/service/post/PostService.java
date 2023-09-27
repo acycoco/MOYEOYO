@@ -15,6 +15,7 @@ import com.example.todo.dto.post.response.PostDeleteResponseDto;
 import com.example.todo.dto.post.response.PostListResponseDto;
 import com.example.todo.dto.post.response.PostOneResponseDto;
 import com.example.todo.exception.TodoAppException;
+import com.example.todo.service.image.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -45,6 +46,7 @@ public class PostService {
     private final TeamReposiotry teamReposiotry;
     private final ImageRepository imageRepository;
     private final MemberRepository memberRepository;
+    private final ImageService imageService;
 
     @Transactional
     public PostCreateResponseDto createPost(final PostCreateRequestDto createDto, Long userId, Long teamId) {
@@ -59,28 +61,29 @@ public class PostService {
         }
 
         // 이미지 첨부했을 경우 - ImageService 만들어서 분리해야 될 거 같음.
-        List<MultipartFile> images = createDto.getImages();
-        String teamDir = createTeamDir(teamId);
-
-        for (MultipartFile image : images) {
-            String postFilename = createPostFilename(image);
-            String postPath = teamDir + postFilename;
-            Path path = Path.of(postPath);
-
-            try {
-                image.transferTo(path);
-            } catch (IOException e) {
-                log.error("createPost error = {}", e);
-                throw new TodoAppException(INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR.getMessage());
-            }
-
-            String imageUrl = String.format("/static/%d/%s", teamId, postFilename);
-            Image savedImage = Image.builder()
-                    .image(imageUrl)
-                    .post(post)
-                    .build();
-            imageRepository.save(savedImage);
-        }
+        imageService.createImage(createDto, post, teamId);
+//        List<MultipartFile> images = createDto.getImages();
+//        String teamDir = createTeamDir(teamId);
+//
+//        for (MultipartFile image : images) {
+//            String postFilename = createPostFilename(image);
+//            String postPath = teamDir + postFilename;
+//            Path path = Path.of(postPath);
+//
+//            try {
+//                image.transferTo(path);
+//            } catch (IOException e) {
+//                log.error("createPost error = {}", e);
+//                throw new TodoAppException(INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR.getMessage());
+//            }
+//
+//            String imageUrl = String.format("/static/%d/%s", teamId, postFilename);
+//            Image savedImage = Image.builder()
+//                    .image(imageUrl)
+//                    .post(post)
+//                    .build();
+//            imageRepository.save(savedImage);
+//        }
 
         return new PostCreateResponseDto(post);
     }
