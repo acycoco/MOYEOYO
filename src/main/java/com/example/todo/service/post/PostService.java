@@ -11,9 +11,14 @@ import com.example.todo.domain.repository.post.PostRepository;
 import com.example.todo.domain.repository.user.UserRepository;
 import com.example.todo.dto.post.request.PostCreateRequestDto;
 import com.example.todo.dto.post.response.PostCreateResponseDto;
+import com.example.todo.dto.post.response.PostListResponseDto;
 import com.example.todo.exception.TodoAppException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.example.todo.exception.ErrorCode.INTERNAL_SERVER_ERROR;
 import static com.example.todo.exception.ErrorCode.NOT_FOUND_MEMBER;
@@ -71,6 +77,19 @@ public class PostService {
         }
 
         return new PostCreateResponseDto(post);
+    }
+
+    public Page<PostListResponseDto> readAllPost(Long userId, Long teamId, Integer offset) {
+        User user = userRepository.getById(userId);
+        TeamEntity team = teamReposiotry.getById(teamId);
+        validateMember(team, user);
+
+        Pageable pageable = PageRequest.of(offset, 20, Sort.by("id").descending());
+        Page<Post> readAllPost = postRepository.findAllByUserIdAndTeamId(userId, teamId, pageable);
+        Page<PostListResponseDto> postListResponseDto = readAllPost.map(post -> new PostListResponseDto(post, user));
+//        List<PostListResponseDto> collect = readAllPost.stream().map(p -> new PostListResponseDto(p, user)).collect(Collectors.toList());
+
+        return postListResponseDto;
     }
 
     private void validateMember(final TeamEntity team, final User user) {
