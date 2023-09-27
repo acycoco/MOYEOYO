@@ -4,6 +4,7 @@ import com.example.todo.domain.entity.BaseTimeEntity;
 import com.example.todo.domain.entity.TeamEntity;
 import com.example.todo.domain.entity.image.Image;
 import com.example.todo.domain.entity.user.User;
+import com.example.todo.dto.post.request.PostUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -53,5 +54,10 @@ public class Post extends BaseTimeEntity {
 
     public void addViewCount() {
         this.viewCount++;
+    }
+
+    public void update(final PostUpdateRequestDto updateDto) {
+        this.title = updateDto.getTitle();
+        this.content = updateDto.getContent();
     }
 }

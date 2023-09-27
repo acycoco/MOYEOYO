@@ -10,6 +10,7 @@ import com.example.todo.domain.repository.image.ImageRepository;
 import com.example.todo.domain.repository.post.PostRepository;
 import com.example.todo.domain.repository.user.UserRepository;
 import com.example.todo.dto.post.request.PostCreateRequestDto;
+import com.example.todo.dto.post.request.PostUpdateRequestDto;
 import com.example.todo.dto.post.response.PostCreateResponseDto;
 import com.example.todo.dto.post.response.PostDeleteResponseDto;
 import com.example.todo.dto.post.response.PostListResponseDto;
@@ -102,6 +103,20 @@ public class PostService {
 
         postRepository.delete(post);
         return new PostDeleteResponseDto(post);
+    }
+
+    @Transactional
+    public PostCreateResponseDto updatePost(final PostUpdateRequestDto updateDto, final Long userId, final Long teamId, final Long postId) {
+        User user = userRepository.getById(userId);
+        TeamEntity team = teamReposiotry.getById(teamId);
+        Post post = postRepository.getById(postId);
+
+        if (!post.getUser().getId().equals(userId)) {
+            throw new TodoAppException(NOT_MATCH_USERID, NOT_MATCH_USERID.getMessage());
+        }
+
+        post.update(updateDto);
+        return new PostCreateResponseDto(post);
     }
 
     private void validateMember(final TeamEntity team, final User user) {
