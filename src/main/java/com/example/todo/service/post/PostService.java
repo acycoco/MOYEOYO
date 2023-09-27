@@ -86,6 +86,7 @@ public class PostService {
         validateMember(team, user);
 
         Post post = postRepository.getById(postId);
+        post.addViewCount();
         return new PostOneResponseDto(post);
     }
 
