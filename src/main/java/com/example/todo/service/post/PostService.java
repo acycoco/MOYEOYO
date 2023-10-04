@@ -6,6 +6,8 @@ import com.example.todo.domain.entity.user.User;
 import com.example.todo.domain.repository.PostRepository;
 import com.example.todo.domain.repository.TeamReposiotry;
 import com.example.todo.domain.repository.user.UserRepository;
+import com.example.todo.dto.post.PostCreateRequestDto;
+import com.example.todo.dto.post.PostCreateResponseDto;
 import com.example.todo.dto.post.PostReadAllResponseDto;
 import com.example.todo.dto.post.PostResponseDto;
 import com.example.todo.exception.ErrorCode;
@@ -34,36 +36,25 @@ public class PostService {
     private final ImageService imageService;
 
     @Transactional
-    public PostResponseDto createPost(final String title, final String content, final List<MultipartFile> images,
+    public PostCreateResponseDto createPost(final PostCreateRequestDto createRequestDto,
                                       final Long teamId, final Long userId
     ) {
-        Team team = teamReposiotry.findById(teamId)
-                .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USER));
-
+        Team team = teamReposiotry.getById(teamId);
+        User user = userRepository.getById(userId);
 
         if (!team.containsMember(user))
             throw new TodoAppException(ErrorCode.NOT_MATCH_MEMBERID);
 
 
-        Post post = Post.builder()
-                .title(title)
-                .content(content)
-                .viewCount(0L)
-                .team(team)
-                .writer(user)
-                .build();
+        Post post = postRepository.save(createRequestDto.toEntity(user, team));
 
-        post = postRepository.save(post);
-
-        if (images != null){
-            imageService.createImage(images, teamId, post.getId());
-            post = postRepository.save(post);
+        if (createRequestDto.getImages() == null){
+            return new PostCreateResponseDto(post);
         }
 
-        return PostResponseDto.fromEntity(post);
+        imageService.createImage(createRequestDto.getImages(), team, post);
+//        post = postRepository.save(post);
+        return new PostCreateResponseDto(post);
     }
 
     @Transactional
@@ -106,8 +97,7 @@ public class PostService {
         if (!team.containsMember(user))
             throw new TodoAppException(ErrorCode.NOT_MATCH_MEMBERID);
 
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_POST));
+        Post post = postRepository.getById(postId);
 
         if (!post.isWriter(user))
             throw new TodoAppException(ErrorCode.NOT_MATCH_USER_AND_POST);
@@ -126,17 +116,14 @@ public class PostService {
 
     @Transactional
     public void deletePost(final Long teamId, final Long userId, final Long postId) {
-        Team team = teamReposiotry.findById(teamId)
-                .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
+        Team team = teamReposiotry.getById(teamId);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USER));
+        User user = userRepository.getById(userId);
 
         if (!team.containsMember(user))
             throw new TodoAppException(ErrorCode.NOT_MATCH_MEMBERID);
 
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_POST));
+        Post post = postRepository.getById(postId);
 
         if (!post.isWriter(user))
             throw new TodoAppException(ErrorCode.NOT_MATCH_USER_AND_POST);

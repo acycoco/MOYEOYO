@@ -1,6 +1,7 @@
 package com.example.todo.api.post;
 
 import com.example.todo.domain.Response;
+import com.example.todo.dto.post.PostCreateRequestDto;
 import com.example.todo.dto.post.PostReadAllResponseDto;
 import com.example.todo.dto.post.PostResponseDto;
 import com.example.todo.service.post.PostService;
@@ -22,13 +23,13 @@ public class PostApiController {
 
     @PostMapping
     public Response<PostResponseDto> create(
-            @PathVariable("teamId") Long teamId, @RequestParam("title") String title, @RequestParam("content") String content,
-            @RequestParam(value = "images", required = false) List<MultipartFile> images,
-            Authentication authentication
+            @RequestBody final PostCreateRequestDto createRequestDto,
+            @PathVariable("teamId") final Long teamId,
+            final Authentication authentication
 
     ) {
         Long userId = Long.parseLong(authentication.getName());
-        return Response.success(postService.createPost(title, content, images, teamId, userId));
+        return Response.success(postService.createPost(createRequestDto, teamId, userId));
     }
 
     @GetMapping

@@ -2,6 +2,7 @@ package com.example.todo.service.image;
 
 import com.example.todo.domain.entity.Image;
 import com.example.todo.domain.entity.Post;
+import com.example.todo.domain.entity.Team;
 import com.example.todo.domain.repository.ImageRepository;
 import com.example.todo.domain.repository.PostRepository;
 import com.example.todo.exception.ErrorCode;
@@ -24,9 +25,7 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final PostRepository postRepository;
     @Transactional
-    public void createImage(List<MultipartFile> images, Long teamId, Long postId){
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_POST));
+    public void createImage(List<MultipartFile> images, Team team, Post post){
 
         for (MultipartFile image : images) {
 
@@ -75,7 +74,8 @@ public class ImageService {
     }
 
 
-    private String uploadFile(MultipartFile image, Long teamId, Long postId) {
+
+    private String uploadFile(final MultipartFile image, final Long teamId, final Long postId) {
 
         String imageDir = String.format("media/%d/%d/", teamId, postId);
 
@@ -105,4 +105,6 @@ public class ImageService {
     private String getFileUrl(){
         return UUID.randomUUID().toString();
     }
+
+    private String createTeamDir()
 }

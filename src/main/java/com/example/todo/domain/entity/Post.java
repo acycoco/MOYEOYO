@@ -33,7 +33,7 @@ public class Post extends BaseTime {
     private Team team;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User writer;
+    private User user;
 
     @OneToMany(mappedBy = "post")
     private List<Image> images = new ArrayList<>();
@@ -42,7 +42,7 @@ public class Post extends BaseTime {
         this.viewCount++;
     }
     public Boolean isWriter(User user){
-        return this.writer.equals(user);
+        return this.user.equals(user);
     }
 
     public Boolean isTeam(Team team){
@@ -62,12 +62,12 @@ public class Post extends BaseTime {
     }
 
     @Builder
-    public Post(Long id, String title, String content, Long viewCount, Team team, User writer) {
+    public Post(Long id, String title, String content, Long viewCount, Team team, User user) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.viewCount = viewCount;
         this.team = team;
-        this.writer = writer;
+        this.user = user;
     }
 }

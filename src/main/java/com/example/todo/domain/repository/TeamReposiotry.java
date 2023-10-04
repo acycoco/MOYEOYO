@@ -1,6 +1,8 @@
 package com.example.todo.domain.repository;
 
 import com.example.todo.domain.entity.Team;
+import com.example.todo.exception.ErrorCode;
+import com.example.todo.exception.TodoAppException;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,11 @@ import java.util.Optional;
 
 @Repository
 public interface TeamReposiotry extends JpaRepository<Team, Long> {
+
+    default Team getById(Long teamId){
+        return findById(teamId)
+                .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
+    }
     Page<Team> findAllByNameContainingAndDeletedAtIsNull(String keyword, Pageable pageable);
 //    Page<Team> findTeamEntitiesByNameAndDeletedAtEmpty(String keyword, Pageable pageable);
     List<Team> findByMembersUserId(Long userId);
