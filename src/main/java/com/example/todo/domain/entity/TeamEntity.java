@@ -24,10 +24,11 @@ public class TeamEntity extends BaseTimeEntity {
 //    @Version
 //    private Long version;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User manager;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private List<MemberEntity> members;
 
 
