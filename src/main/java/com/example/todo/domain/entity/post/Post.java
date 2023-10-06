@@ -65,7 +65,7 @@ public class Post extends BaseTimeEntity {
         this.content = updateDto.getContent();
     }
 
-    public boolean isTeamMatch(TeamEntity team){
+    public boolean validateTeam(TeamEntity team){
         return this.team.equals(team);
     }
 }
