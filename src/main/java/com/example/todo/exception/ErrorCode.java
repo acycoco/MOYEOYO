@@ -30,6 +30,7 @@ public enum ErrorCode {
     NOT_MATCH_TEAM_AND_TASK(NOT_FOUND, "해당팀의 업무가 아닙니다."),
     NOT_MATCH_TEAM_AND_POST(NOT_FOUND, "해당팀의 게시글이 아닙니다."),
     NOT_MATCH_POST_AND_COMMENT(NOT_FOUND, "해당게시글의 댓글이 아닙니다."),
+    NOT_MATCH_COMMENT_AND_REPLY(NOT_FOUND, "해당댓글의 답글이 아닙니다."),
     NOT_MATCH_USERS_AND_USERS_SUBSCRIPTION(NOT_FOUND, "해당 유저의 구독권이 아닙니다."),
 
     NOT_FOUND_ENTITY(NOT_FOUND, "데이터가 존재하지 않습니다."),
@@ -46,7 +47,7 @@ public enum ErrorCode {
 
     NOT_FOUND_POST(NOT_FOUND, "해당 게시글을 찾을 수 없습니다."),
     NOT_FOUND_COMMENT(NOT_FOUND, "해당 댓글을 찾을 수 없습니다."),
-
+    NOT_FOUND_REPLY(NOT_FOUND, "해당 답글을 찾을 수 없습니다."),
 
     ALREADY_USER_USERNAME(CONFLICT, "이미 존재하는 사용자입니다."),
     ALREADY_USER_JOINED(BAD_REQUEST, "이미 해당 팀에 가입한 유저입니다."),
