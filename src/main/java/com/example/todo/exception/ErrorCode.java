@@ -28,6 +28,8 @@ public enum ErrorCode {
     NOT_MATCH_MANAGERID(NOT_FOUND, "팀매니저가 아닙니다."),
     NOT_MATCH_MEMBERID(NOT_FOUND, "팀원이 아닙니다."),
     NOT_MATCH_TEAM_AND_TASK(NOT_FOUND, "해당팀의 업무가 아닙니다."),
+    NOT_MATCH_TEAM_AND_POST(NOT_FOUND, "해당팀의 게시글이 아닙니다."),
+    NOT_MATCH_POST_AND_COMMENT(NOT_FOUND, "해당게시글의 댓글이 아닙니다."),
     NOT_MATCH_USERS_AND_USERS_SUBSCRIPTION(NOT_FOUND, "해당 유저의 구독권이 아닙니다."),
 
     NOT_FOUND_ENTITY(NOT_FOUND, "데이터가 존재하지 않습니다."),
@@ -43,6 +45,7 @@ public enum ErrorCode {
     NOT_FOUND_PAYMENT(NOT_FOUND, "해당 결제 상제 정보가 존재하지 않습니다."),
 
     NOT_FOUND_POST(NOT_FOUND, "해당 게시글을 찾을 수 없습니다."),
+    NOT_FOUND_COMMENT(NOT_FOUND, "해당 댓글을 찾을 수 없습니다."),
 
 
     ALREADY_USER_USERNAME(CONFLICT, "이미 존재하는 사용자입니다."),
