@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class CommentCreateRequestDto {
+public class CommentRequestDto {
 
     private String content;
 
-    public CommentCreateRequestDto(final String content) {
+    public CommentRequestDto(final String content) {
         this.content = content;
     }
 

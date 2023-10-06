@@ -9,9 +9,8 @@ import com.example.todo.domain.repository.TeamReposiotry;
 import com.example.todo.domain.repository.comment.CommentRepository;
 import com.example.todo.domain.repository.post.PostRepository;
 import com.example.todo.domain.repository.user.UserRepository;
-import com.example.todo.dto.comment.request.CommentCreateRequestDto;
+import com.example.todo.dto.comment.request.CommentRequestDto;
 import com.example.todo.dto.comment.response.*;
-import com.example.todo.exception.ErrorCode;
 import com.example.todo.exception.TodoAppException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,14 +36,14 @@ public class CommentService {
     private final PostRepository postRepository;
 
     @Transactional
-    public CommentCreateResponseDto createComment(final CommentCreateRequestDto createDto, final Long userId, final Long teamId, final Long postId) {
+    public CommentCreateResponseDto createComment(final CommentRequestDto createDto, final Long userId, final Long teamId, final Long postId) {
         log.info("userId {}", userId );
         User user = userRepository.getById(userId);
         log.info("teamId{} ", teamId );
         TeamEntity team = teamReposiotry.getById(teamId);
         Post post = postRepository.getById(postId);
 
-        if (!post.isTeamMatch(team))
+        if (!post.validateTeam(team))
             throw new TodoAppException(NOT_MATCH_TEAM_AND_POST, NOT_MATCH_TEAM_AND_POST.getMessage());
 
         memberRepository.existsByTeamAndUserOrThrow(team, user);
@@ -59,7 +58,7 @@ public class CommentService {
         TeamEntity team = teamReposiotry.getById(teamId);
         Post post = postRepository.getById(postId);
 
-        if (!post.isTeamMatch(team))
+        if (!post.validateTeam(team))
             throw new TodoAppException(NOT_MATCH_TEAM_AND_POST, NOT_MATCH_TEAM_AND_POST.getMessage());
 
         memberRepository.existsByTeamAndUserOrThrow(team, user);
@@ -73,7 +72,7 @@ public class CommentService {
         TeamEntity team = teamReposiotry.getById(teamId);
         Post post = postRepository.getById(postId);
 
-        if (!post.isTeamMatch(team))
+        if (!post.validateTeam(team))
             throw new TodoAppException(NOT_MATCH_TEAM_AND_POST, NOT_MATCH_TEAM_AND_POST.getMessage());
 
         Comment comment = commentRepository.getById(commentId);
@@ -85,12 +84,12 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentUpdateResponseDto updateComment(final CommentCreateRequestDto updateDto, final Long userId, final Long teamId, final Long postId, final Long commentId){
+    public CommentUpdateResponseDto updateComment(final CommentRequestDto updateDto, final Long userId, final Long teamId, final Long postId, final Long commentId){
         User user = userRepository.getById(userId);
         TeamEntity team = teamReposiotry.getById(teamId);
         Post post = postRepository.getById(postId);
 
-        if (!post.isTeamMatch(team))
+        if (!post.validateTeam(team))
             throw new TodoAppException(NOT_MATCH_TEAM_AND_POST, NOT_MATCH_TEAM_AND_POST.getMessage());
 
         Comment comment = commentRepository.getById(commentId);
@@ -111,7 +110,7 @@ public class CommentService {
         TeamEntity team = teamReposiotry.getById(teamId);
         Post post = postRepository.getById(postId);
 
-        if (!post.isTeamMatch(team))
+        if (!post.validateTeam(team))
             throw new TodoAppException(NOT_MATCH_TEAM_AND_POST, NOT_MATCH_TEAM_AND_POST.getMessage());
 
         Comment comment = commentRepository.getById(commentId);

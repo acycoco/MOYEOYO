@@ -1,7 +1,7 @@
 package com.example.todo.api.comment;
 
 import com.example.todo.domain.Response;
-import com.example.todo.dto.comment.request.CommentCreateRequestDto;
+import com.example.todo.dto.comment.request.CommentRequestDto;
 import com.example.todo.dto.comment.response.*;
 import com.example.todo.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class CommentApiController {
     private final CommentService commentService;
 
     @PostMapping
-    public Response<CommentCreateResponseDto> createComment(@RequestBody final CommentCreateRequestDto createDto,
+    public Response<CommentCreateResponseDto> createComment(@RequestBody final CommentRequestDto createDto,
                                                             final Authentication authentication,
                                                             @PathVariable final Long teamId,
                                                             @PathVariable final Long postId) {
@@ -45,7 +45,7 @@ public class CommentApiController {
     }
 
     @PutMapping("/{commentId}")
-    public Response<CommentUpdateResponseDto> updateComment(@RequestBody final CommentCreateRequestDto updateDto,
+    public Response<CommentUpdateResponseDto> updateComment(@RequestBody final CommentRequestDto updateDto,
                                                             final Authentication authentication,
                                                             @PathVariable final Long teamId,
                                                             @PathVariable final Long postId,
