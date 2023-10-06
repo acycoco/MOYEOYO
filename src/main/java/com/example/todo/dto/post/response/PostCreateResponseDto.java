@@ -11,9 +11,7 @@ import lombok.NoArgsConstructor;
 public class PostCreateResponseDto {
 
     private Long id;
-
     private String title;
-
     private String content;
 
 

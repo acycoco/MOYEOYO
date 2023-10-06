@@ -14,14 +14,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/team")
 @RestController
 public class PostApiController {
 
     private final PostService postService;
 
     @PostMapping("/{teamId}/post")
-    public Response<PostCreateResponseDto> createPost(final PostCreateRequestDto createDto,
+    public Response<PostCreateResponseDto> createPost(@RequestBody final PostCreateRequestDto createDto,
                                                       final Authentication authentication,
                                                       @PathVariable final Long teamId) {
         Long userId = Long.parseLong(authentication.getName());
@@ -31,7 +31,7 @@ public class PostApiController {
     @GetMapping("/{teamId}/post")
     public Response<Page<PostListResponseDto>> readAllPost(final Authentication authentication,
                                                           @PathVariable final Long teamId,
-                                                          @RequestParam(value = "offset", defaultValue = "0") Integer offset) {
+                                                          @RequestParam(value = "offset", defaultValue = "1") final Integer offset) {
          Long userId = Long.parseLong(authentication.getName());
          return Response.success(postService.readAllPost(userId, teamId, offset));
     }
