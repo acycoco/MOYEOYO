@@ -3,8 +3,7 @@ package com.example.todo.domain.entity.comment;
 import com.example.todo.domain.entity.BaseTimeEntity;
 import com.example.todo.domain.entity.post.Post;
 import com.example.todo.domain.entity.user.User;
-import com.example.todo.dto.comment.request.CommentCreateRequestDto;
-import com.example.todo.dto.comment.response.CommentCreateResponseDto;
+import com.example.todo.dto.comment.request.CommentRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,6 +11,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -29,6 +31,9 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+    private List<Reply> replies = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -40,7 +45,7 @@ public class Comment extends BaseTimeEntity {
         this.user = user;
     }
 
-    public void update(final CommentCreateRequestDto updateDto) {
+    public void update(final CommentRequestDto updateDto) {
         this.content = updateDto.getContent();
     }
     public boolean validatePost(Post post){
