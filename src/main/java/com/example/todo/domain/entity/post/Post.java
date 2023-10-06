@@ -2,6 +2,7 @@ package com.example.todo.domain.entity.post;
 
 import com.example.todo.domain.entity.BaseTimeEntity;
 import com.example.todo.domain.entity.TeamEntity;
+import com.example.todo.domain.entity.comment.Comment;
 import com.example.todo.domain.entity.image.Image;
 import com.example.todo.domain.entity.user.User;
 import com.example.todo.dto.post.request.PostUpdateRequestDto;
@@ -41,6 +42,9 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Image> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
+
     private int viewCount;
 
     @Builder
@@ -59,5 +63,9 @@ public class Post extends BaseTimeEntity {
     public void update(final PostUpdateRequestDto updateDto) {
         this.title = updateDto.getTitle();
         this.content = updateDto.getContent();
+    }
+
+    public boolean isTeamMatch(TeamEntity team){
+        return this.team.equals(team);
     }
 }
