@@ -80,6 +80,7 @@ public class PostService {
         return postListResponseDto;
     }
 
+    @Transactional
     public PostOneResponseDto readOnePost(Long userId, Long teamId, Long postId) {
         User user = userRepository.getById(userId);
         TeamEntity team = teamReposiotry.getById(teamId);
