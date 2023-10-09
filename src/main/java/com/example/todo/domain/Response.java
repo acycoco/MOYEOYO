@@ -19,4 +19,8 @@ public class Response<T> {
     public static <T> Response<T> success(T data) {
         return new Response<>(ResultCode.SUCCESS, data);
     }
+
+    public static <T> Response<T> conflict(T data) {
+        return new Response<>(ResultCode.CONFLICT, data);
+    }
 }
