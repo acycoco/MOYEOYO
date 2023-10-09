@@ -21,6 +21,7 @@ public class PostCreateRequestDto {
 
     private List<MultipartFile> images;
 
+    @Builder
     public PostCreateRequestDto(final String title, final String content, final List<MultipartFile> images) {
         this.title = title;
         this.content = content;
