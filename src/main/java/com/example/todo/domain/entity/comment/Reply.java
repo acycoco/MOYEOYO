@@ -1,9 +1,7 @@
 package com.example.todo.domain.entity.comment;
 
 import com.example.todo.domain.entity.BaseTimeEntity;
-import com.example.todo.domain.entity.post.Post;
 import com.example.todo.domain.entity.user.User;
-import com.example.todo.dto.comment.request.CommentRequestDto;
 import com.example.todo.dto.reply.request.ReplyRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
