@@ -37,9 +37,7 @@ public class CommentService {
 
     @Transactional
     public CommentCreateResponseDto createComment(final CommentRequestDto createDto, final Long userId, final Long teamId, final Long postId) {
-        log.info("userId {}", userId );
         User user = userRepository.getById(userId);
-        log.info("teamId{} ", teamId );
         TeamEntity team = teamReposiotry.getById(teamId);
         Post post = postRepository.getById(postId);
 
