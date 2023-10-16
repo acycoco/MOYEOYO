@@ -72,7 +72,7 @@ public class PostService {
         TeamEntity team = teamReposiotry.getById(teamId);
         validateMember(team, user);
 
-        Pageable pageable = PageRequest.of(offset, 20, Sort.by("id").descending());
+        Pageable pageable = PageRequest.of(offset - 1, 20, Sort.by("id").descending());
         Page<Post> readAllPost = postRepository.findAllByUserIdAndTeamId(userId, teamId, pageable);
         Page<PostListResponseDto> postListResponseDto = readAllPost.map(post -> new PostListResponseDto(post, user));
 //        List<PostListResponseDto> collect = readAllPost.stream().map(p -> new PostListResponseDto(p, user)).collect(Collectors.toList());
@@ -80,6 +80,7 @@ public class PostService {
         return postListResponseDto;
     }
 
+    @Transactional
     public PostOneResponseDto readOnePost(Long userId, Long teamId, Long postId) {
         User user = userRepository.getById(userId);
         TeamEntity team = teamReposiotry.getById(teamId);

@@ -43,12 +43,12 @@ public class TeamService {
         User manager = userRepository.findById(userId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USER));
 
         //팀 최대인원이 5명을 초과할 시 구독권을 구독해야 한다.
-        if (teamCreateDto.getParticipantNumMax() > FREE_TEAM_PARTICIPANT_NUM) {
-            UsersSubscriptionEntity usersSubscription = usersSubscriptionRepository.findByUsersAndSubscriptionStatus(manager, SubscriptionStatus.ACTIVE)
-                    .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_ACTIVE_SUBSCRIPTION));
-            if (teamCreateDto.getParticipantNumMax() > usersSubscription.getSubscription().getMaxMember())
-                throw new TodoAppException(ErrorCode.EXCEED_ALLOWED_TEAM_MEMBERS);
-        }
+//        if (teamCreateDto.getParticipantNumMax() > FREE_TEAM_PARTICIPANT_NUM) {
+//            UsersSubscriptionEntity usersSubscription = usersSubscriptionRepository.findByUsersAndSubscriptionStatus(manager, SubscriptionStatus.ACTIVE)
+//                    .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_ACTIVE_SUBSCRIPTION));
+//            if (teamCreateDto.getParticipantNumMax() > usersSubscription.getSubscription().getMaxMember())
+//                throw new TodoAppException(ErrorCode.EXCEED_ALLOWED_TEAM_MEMBERS);
+//        }
 
         TeamEntity teamEntity = new TeamEntity();
         teamEntity.setName(teamCreateDto.getName());
