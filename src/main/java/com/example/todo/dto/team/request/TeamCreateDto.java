@@ -1,16 +1,16 @@
-package com.example.todo.dto.team;
+package com.example.todo.dto.team.request;
 
+import com.example.todo.domain.entity.TeamEntity;
+import com.example.todo.domain.entity.user.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Setter
 public class TeamCreateDto {
-    //Validation 추가 필요
+
     private String name;
     private String description;
-    //Validation 추가 필요
     private String joinCode;
     private Integer participantNumMax;
 
@@ -20,5 +20,16 @@ public class TeamCreateDto {
         this.description = description;
         this.joinCode = joinCode;
         this.participantNumMax = participantNumMax;
+    }
+
+    public TeamEntity toEntity(User manager){
+        return TeamEntity.builder()
+                .name(name)
+                .description(description)
+                .joinCode(joinCode)
+                .participantNumMax(participantNumMax)
+                .participantNum(1)
+                .manager(manager)
+                .build();
     }
 }

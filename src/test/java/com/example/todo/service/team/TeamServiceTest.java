@@ -6,7 +6,7 @@
 //import com.example.todo.domain.repository.MemberRepository;
 //import com.example.todo.domain.repository.TeamReposiotry;
 //import com.example.todo.domain.repository.user.UserRepository;
-//import com.example.todo.dto.team.TeamCreateDto;
+//import com.example.todo.dto.team.request.TeamCreateDto;
 //import com.example.todo.dto.team.TeamJoinDto;
 //import com.example.todo.facade.OptimisticLockTeamFacade;
 //import com.example.todo.facade.RedissonLockTeamFacade;

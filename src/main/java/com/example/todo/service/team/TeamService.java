@@ -11,6 +11,8 @@ import com.example.todo.domain.repository.UsersSubscriptionRepository;
 import com.example.todo.domain.repository.user.UserRepository;
 import com.example.todo.dto.task.TaskApiDto;
 import com.example.todo.dto.team.*;
+import com.example.todo.dto.team.request.TeamCreateDto;
+import com.example.todo.dto.team.response.TeamCreateResponseDto;
 import com.example.todo.exception.ErrorCode;
 import com.example.todo.exception.TodoAppException;
 import com.example.todo.service.task.TaskApiService;
@@ -28,9 +30,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j // 나중에 지우기
+@Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TeamService {
     private final TeamReposiotry teamReposiotry;
     private final UserRepository userRepository;
@@ -38,47 +41,43 @@ public class TeamService {
     private final TaskApiService taskApiService;
     private final UsersSubscriptionRepository usersSubscriptionRepository;
     public static final int FREE_TEAM_PARTICIPANT_NUM = 5;
+
     @Transactional
-    public void createTeam(Long userId, TeamCreateDto teamCreateDto) {
-        User manager = userRepository.findById(userId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USER));
+    public TeamCreateResponseDto createTeam(Long userId, TeamCreateDto teamCreateDto) {
+        User manager = userRepository.getById(userId);
 
         //팀 최대인원이 5명을 초과할 시 구독권을 구독해야 한다.
-//        if (teamCreateDto.getParticipantNumMax() > FREE_TEAM_PARTICIPANT_NUM) {
-//            UsersSubscriptionEntity usersSubscription = usersSubscriptionRepository.findByUsersAndSubscriptionStatus(manager, SubscriptionStatus.ACTIVE)
-//                    .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_ACTIVE_SUBSCRIPTION));
-//            if (teamCreateDto.getParticipantNumMax() > usersSubscription.getSubscription().getMaxMember())
-//                throw new TodoAppException(ErrorCode.EXCEED_ALLOWED_TEAM_MEMBERS);
-//        }
+        if (teamCreateDto.getParticipantNumMax() > FREE_TEAM_PARTICIPANT_NUM) {
+            UsersSubscriptionEntity usersSubscription = usersSubscriptionRepository.findByUsersAndSubscriptionStatus(manager, SubscriptionStatus.ACTIVE)
+                    .orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_ACTIVE_SUBSCRIPTION));
+            if (teamCreateDto.getParticipantNumMax() > usersSubscription.getSubscription().getMaxMember())
+                throw new TodoAppException(ErrorCode.EXCEED_ALLOWED_TEAM_MEMBERS);
+        }
 
-        TeamEntity teamEntity = new TeamEntity();
-        teamEntity.setName(teamCreateDto.getName());
-        teamEntity.setDescription(teamCreateDto.getDescription());
-        teamEntity.setJoinCode(teamCreateDto.getJoinCode());
-        teamEntity.setManager(manager);
-        teamEntity.setParticipantNumMax(teamCreateDto.getParticipantNumMax());
+        TeamEntity team = teamCreateDto.toEntity(manager);
 
         // manager를 멤버로 추가
-        MemberEntity member = new MemberEntity();
-        member.setTeam(teamEntity);
-        member.setUser(manager);
+        MemberEntity member = MemberEntity.builder()
+                .team(team)
+                .user(manager)
+                .build();
 
-        teamEntity.setMembers(new ArrayList<>());
-        teamEntity.getMembers().add(member);
-        teamEntity.setParticipantNum(teamEntity.getMembers().size());
-        teamReposiotry.save(teamEntity);
+
+//        teamEntity.setMembers(new ArrayList<>());
+//        teamEntity.getMembers().add(member);
+//        teamEntity.setParticipantNum(teamEntity.getMembers().size());
+        team = teamReposiotry.save(team);
         memberRepository.save(member);
+        return new TeamCreateResponseDto(team);
     }
 
     @Transactional
-    public void joinTeam(Long userId, TeamJoinDto teamJoinDto, Long teamId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_USER));
+    public void joinTeam(Long userId, Long teamId, TeamJoinDto teamJoinDto) {
+        User user = userRepository.getById(userId);
+        TeamEntity team = teamReposiotry.findByIdWithOptimisticLock(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
 
-        TeamEntity team = teamReposiotry.findById(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
-//        TeamEntity team = teamReposiotry.findByIdWithPessimisticLock(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
-//        TeamEntity team = teamReposiotry.findByIdWithOptimisticLock(teamId).orElseThrow(() -> new TodoAppException(ErrorCode.NOT_FOUND_TEAM));
-
-        if (!team.getJoinCode().equals(teamJoinDto.getJoinCode()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong JoinCode!");
+        if (!team.validateJoinCode(teamJoinDto.getJoinCode()))
+            throw new TodoAppException(ErrorCode.INVALID_JOIN_CODE, ErrorCode.INVALID_JOIN_CODE.getMessage());
 
         //팀 멤버수 제한
         if (team.getParticipantNum().equals(team.getParticipantNumMax()))
