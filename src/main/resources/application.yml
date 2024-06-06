@@ -1,12 +1,26 @@
 spring:
   profiles:
     include: oauth
+  #  sql:
+  #    init:
+  #      mode: always
+  #  datasource:
+  #    url: jdbc:h2:mem:testdb;
+  #    username: sa
+  #    password:
+  #    driver-class-name: org.h2.Driver
   datasource:
-    url: jdbc:mysql://${RDS_URL}/todo
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: admin
-    password: angksehwjs031
-
+    url: jdbc:sqlite:db.sqlite
+    driver-class-name: org.sqlite.JDBC
+#spring:
+#  profiles:
+#    include: oauth
+#  datasource:
+#    url: jdbc:mysql://${RDS_URL}/todo
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: admin
+#    password: angksehwjs031
+#
   mail:
     host: smtp.gmail.com
     port: 587
@@ -29,6 +43,16 @@ spring:
         format_sql: true
         default_batch_fetch_size: 1000
     open-in-view: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  mvc:
+    static-path-pattern: /static/**
+  web:
+    resources:
+      static-locations: file:media/,classpath:/static
 
 
   data:
